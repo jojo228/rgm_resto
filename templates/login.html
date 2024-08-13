@@ -1,28 +1,25 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReservQ - Restaurant Booking Html Template</title>
+    <title>RGM Food</title>
     <!-- favicon  -->
-    <link rel="shortcut icon" href="./assets/images/icon/fav.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'assets/images/icon/fav.svg' %}" type="image/x-icon">
 
     <!-- font awesome cdn link  -->
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 
-
-
-
-
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/venobox.min.css">
-    <link rel="stylesheet" href="css/aos.css">
-    <link rel="stylesheet" href="css/slick.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/venobox.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'css/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
 </head>
 
 <body>
@@ -37,7 +34,7 @@
 
             <div class="sign-up-main-two-item">
                 <div class="sign-up-img">
-                    <img src="./assets/images/thumb/login.png" alt="img">
+                    <img src="{% static 'assets/images/thumb/login.png' %}" alt="img">
                     <div class="sign-up-main-two-item-text">
                         <p>You agree to ReservQ <span>Terms of Use & Privacy Policy.</span> You don't need to consent as
                             a condition
@@ -54,7 +51,7 @@
 
         <div class="sign-up-main">
             <div class="sign-up-logo">
-                <img src="./assets/images/logo/logo-header.svg" alt="logo">
+                <img src="{% static 'assets/images/logo/logo-header.svg' %}" alt="logo">
             </div>
             <div class="sign-up-text">
                 <h2>Welcome back</h2>
@@ -64,15 +61,16 @@
 
             <div class="sign-up-from">
                 <div class="sign-up-from-item">
-
+                <form method="POST">
+                    {% csrf_token %}
                     <div class="sign-up-from-inner">
                         <label for="exampleFormControlInput1" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="exampleFormControlInput"
-                            placeholder="hi@example.com">
+                        <input type="email" name="email" class="form-control" id="exampleFormControlInput"
+                            placeholder="Email">
                     </div>
                     <div class="sign-up-from-inner">
                         <label for="exampleFormControlInput1" class="form-label">Password</label>
-                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Password">
+                        <input type="password" name="password" class="form-control" id="exampleFormControlInput1" placeholder="Mot de passe" required>
 
                         <div class="icon">
                             <span>
@@ -329,7 +327,7 @@
 
 
                                                 <div class="modal-sign-up-img  ">
-                                                    <img src="./assets/images/small/modal-imf-7.png" alt="logo">
+                                                    <img src="{% static 'assets/images/small/modal-imf-7.png' %}" alt="logo">
                                                 </div>
                                                 <div class="modal-sign-up-text sign-up-text-to  ">
                                                     <h2>Your successfully changed your password</h2>
@@ -371,24 +369,13 @@
 
 
                             </div>
-
-
-
-
-
-
-
-
-
                         </div>
 
 
                     </div>
 
                     <div class="sign-up-btn">
-                        <div class="main-btn-four">
-                            <a href="sign-up.html">Sign In</a>
-                        </div>
+                        <button class="main-btn-four" type="submit">Se connecter</button>
                         <div class="sign-up-btn-two">
                             <a href="#"> <span><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -404,13 +391,14 @@
                                         <path
                                             d="M21.8055 10.0415H21V10H12V14H17.6515C17.2571 15.1082 16.5467 16.0766 15.608 16.7855L15.6095 16.7845L18.7045 19.4035C18.4855 19.6025 22 17 22 12C22 11.3295 21.931 10.675 21.8055 10.0415Z"
                                             fill="#1976D2" />
-                                    </svg></span> Contiue with Google</a>
+                                    </svg></span> Contiuner avec Google</a>
                         </div>
 
 
-                        <p>Don’t have an account? <a href="sign-up.html">Sign up for free</a></p>
+                        <p>Vous n'avez pas de compte? <a href="{% url 'userauths:sign-up' %}">Inscrivez-vous ici</a></p>
 
                     </div>
+                </form>
                 </div>
             </div>
 
@@ -427,14 +415,13 @@
 
 
 
-    <script src="./assets/js/jquery-3.6.3.min.js"></script>
-    <script src="./assets/js/venobox.min.js"></script>
-    <script src="./assets/js/aos.js"></script>
-    <script src="./assets/js/slick.min.js"></script>
-    <script src="./assets/js//jquery.shuffle.min.js"></script>
-    <script src="./assets/js/bootstrap.bundle.min.js"></script>
-    <script src="./assets/js/custom.js"></script>
-
+    <script src="{% static 'assets/js/jquery-3.6.3.min.js' %}"></script>
+    <script src="{% static 'assets/js/venobox.min.js' %}"></script>
+    <script src="{% static 'assets/js/aos.js' %}"></script>
+    <script src="{% static 'assets/js/slick.min.js' %}"></script>
+    <script src="{% static 'assets/js//jquery.shuffle.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
 
 
 

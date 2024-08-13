@@ -1,35 +1,6 @@
 from django import views
 from django.urls import path, include
-from core.views import (
-    add_to_cart,
-    add_to_wishlist,
-    ajax_add_review,
-    ajax_contact_form,
-    cart_view,
-    category_list_view,
-    category_product_list__view,
-    checkout_view,
-    customer_dashboard,
-    delete_item_from_cart,
-    filter_product,
-    index,
-    make_address_default,
-    order_detail,
-    payment_completed_view,
-    payment_failed_view,
-    product_detail_view,
-    product_list_view,
-    remove_wishlist,
-    search_view,
-    tag_list,
-    update_cart,
-    wishlist_view,
-    contact,
-    about_us,
-    purchase_guide,
-    privacy_policy,
-    terms_of_service,
-)
+from core.views import *
 
 app_name = "core"
 
@@ -80,6 +51,7 @@ urlpatterns = [
     path("contact/", contact, name="contact"),
     path("ajax-contact-form/", ajax_contact_form, name="ajax-contact-form"),
     path("about_us/", about_us, name="about_us"),
+    path("blog/", blog, name="blog"),
     path("purchase_guide/", purchase_guide, name="purchase_guide"),
     path("privacy_policy/", privacy_policy, name="privacy_policy"),
     path("terms_of_service/", terms_of_service, name="terms_of_service"),

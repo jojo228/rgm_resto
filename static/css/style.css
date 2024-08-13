@@ -236,7 +236,7 @@ p {
   margin-top: -48px !important;
   z-index: 999;
   box-shadow: 0 14px 16px 0 rgba(11, 2, 55, 0.1);
-  background-color: #fff !important;
+  background-color: #ea0404 !important;
 }
 .header .header-main {
   display: flex;
@@ -419,7 +419,7 @@ p {
 }
 .header .menu-bg .nav-btn-main .nav-btn-two .love:after {
   position: absolute;
-  content: "8";
+  /* content: "8"; */
   top: 0;
   right: 0;
   width: 16px;
@@ -442,9 +442,26 @@ p {
 .header .menu-bg .nav-btn-main .nav-btn-two .cart {
   position: relative;
 }
+.cart-length {
+  position: absolute;
+  /* content: "8"; */
+  top: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  line-height: 16px;
+  background-color: var(--primary-color);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 500;
+  font-family: "Plus Jakarta Sans";
+  border-radius: 50px;
+  transition: all 0.3s;
+}
 .header .menu-bg .nav-btn-main .nav-btn-two .cart::after {
   position: absolute;
-  content: "3";
+  /* content: "3"; */
 }
 .header .menu-bg .nav-btn-main .nav-btn-two .cart .click {
   position: absolute;

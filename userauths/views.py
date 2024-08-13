@@ -23,14 +23,14 @@ def register_view(request):
                 password=form.cleaned_data["password1"],
             )
             login(request, new_user)
-            return redirect("core:index")
+            return redirect("userauths:sign-in")
     else:
         form = UserRegisterForm()
 
     context = {
         "form": form,
     }
-    return render(request, "userauths/sign-up.html", context)
+    return render(request, "sign-up.html", context)
 
 
 def login_view(request):
@@ -56,7 +56,7 @@ def login_view(request):
         except:
             messages.warning(request, f"User with {email} does not exist")
 
-    return render(request, "userauths/sign-in.html")
+    return render(request, "login.html")
 
 
 def logout_view(request):
@@ -83,4 +83,4 @@ def profile_update(request):
         "profile": profile,
     }
 
-    return render(request, "userauths/profile-edit.html", context)
+    return render(request, "profile-edit.html", context)

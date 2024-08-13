@@ -28,7 +28,7 @@
     <!-- ===== Loader Start ===== -->
     <div class="preloader-wrap">
         <div class="loader">
-            <img src="./assets/images/thumb/loader-2.gif" alt="loader">
+            <img src="{% static 'assets/images/thumb/loader-2.gif' %}" alt="loader">
         </div>
     </div>
     <!-- ===== Loader End ===== -->
@@ -59,30 +59,7 @@
                             </span>
                         </div>
 
-                        <div class="location-btn">
-                            <div class="dropdown">
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                                    id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Dropdown link
-                                </a>
-
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="location-btn-icon">
-                                <span>
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M5.83301 8.33203L9.99967 11.6654L14.1663 8.33203" stroke="white"
-                                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </span>
-                            </div>
-                        </div>
+                       
 
                     </div>
                 </div>
@@ -156,42 +133,17 @@
 
                             <div class="nav-main">
                                 <div class="logo">
-                                    <a href="index.html"> <img src="./assets/images/logo/footer-logo.svg"
+                                    <a href="{% url 'core:index' %}"> <img src="./assets/images/logo/footer-logo.svg"
                                             alt="logo"></a>
                                 </div>
 
                                 <div class="menu">
                                     <ul>
-                                        <li><a href="#">Home
-                                                <span><i class="fa-solid fa-angle-down"></i></span>
-                                            </a>
-
-                                            <ul>
-                                                <li>
-                                                    <a href="index.html">Home-01</a>
-                                                </li>
-                                                <li>
-                                                    <a href="index-2.html">Home-02</a>
-                                                </li>
-                                            </ul>
-
-
-                                        </li>
-                                        <li><a href="all-food.html">Menu</a></li>
-                                        <li><a href="about.html">About Us</a></li>
-                                        <li><a href="contact.html">Contact</a></li>
-                                        <li><a href="blog.html">Blog <span><i class="fa-solid fa-angle-down"></i></span>
-                                            </a>
-
-
-                                            <ul>
-                                                <li><a href="blog.html"> Blog</a></li>
-                                                <li><a href="blog-details.html"> Blog-Details</a></li>
-                                            </ul>
-
-
-
-                                        </li>
+                                        <li><a href="{% url 'core:index' %}">Accueil</a></li>
+                                        <li><a href="{% url 'core:product-list' %}">Menu</a></li>
+                                        <li><a href="{% url 'core:about_us' %}">A Propos</a></li>
+                                        <li><a href="{% url 'core:contact' %}">Contact</a></li>
+                                        <li><a href="{% url 'core:index' %}">Blog</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -2283,13 +2235,13 @@
 
 
 
-    <script src="./assets/js/jquery-3.6.3.min.js"></script>
-    <script src="./assets/js/venobox.min.js"></script>
-    <script src="./assets/js/aos.js"></script>
-    <script src="./assets/js/slick.min.js"></script>
-    <script src="./assets/js//jquery.shuffle.min.js"></script>
-    <script src="./assets/js/bootstrap.bundle.min.js"></script>
-    <script src="./assets/js/custom.js"></script>
+    <script src="{% static 'assets/js/jquery-3.6.3.min.js' %}"></script>
+    <script src="{% static 'assets/js/venobox.min.js' %}"></script>
+    <script src="{% static 'assets/js/aos.js' %}"></script>
+    <script src="{% static 'assets/js/slick.min.js' %}"></script>
+    <script src="{% static 'assets/js//jquery.shuffle.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
 
 
 

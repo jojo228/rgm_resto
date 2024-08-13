@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 from regex import E
 from requests import session
 from taggit.models import Tag
@@ -89,7 +90,7 @@ def product_detail_view(request, pid):
     make_review = True
 
     if request.user.is_authenticated:
-        address = Address.objects.get(status=True, user=request.user)
+        # address = Address.objects.get(status=True, user=request.user)
         user_review_count = ProductReview.objects.filter(
             user=request.user, product=product
         ).count()
@@ -112,7 +113,7 @@ def product_detail_view(request, pid):
         "products": products,
     }
 
-    return render(request, "product-detail.html", context)
+    return render(request, "foods-details.html", context)
 
 
 def tag_list(request, tag_slug=None):
@@ -227,7 +228,7 @@ def cart_view(request):
             cart_total_amount += int(item["qty"]) * float(item["price"])
         return render(
             request,
-            "cart.html",
+            "shopping-cart.html",
             {
                 "cart_data": request.session["cart_data_obj"],
                 "totalcartitems": len(request.session["cart_data_obj"]),
@@ -265,32 +266,48 @@ def delete_item_from_cart(request):
     )
 
 
+
+
+@csrf_exempt
 def update_cart(request):
-    product_id = str(request.GET["id"])
-    product_qty = request.GET["qty"]
+    product_id = request.POST.get("id")
+    product_qty = request.POST.get("qty")
 
-    if "cart_data_obj" in request.session:
-        if product_id in request.session["cart_data_obj"]:
+    if request.method == "POST":
+        if "cart_data_obj" in request.session:
             cart_data = request.session["cart_data_obj"]
-            cart_data[str(request.GET["id"])]["qty"] = product_qty
-            request.session["cart_data_obj"] = cart_data
+            if product_id in cart_data:
+                cart_data[product_id]["qty"] = product_qty
+                request.session["cart_data_obj"] = cart_data
 
-    cart_total_amount = 0
-    if "cart_data_obj" in request.session:
-        for p_id, item in request.session["cart_data_obj"].items():
-            cart_total_amount += int(item["qty"]) * float(item["price"])
+        cart_total_amount = 0
+        item_total_amounts = {}
 
-    context = render_to_string(
-        "async/cart-list.html",
-        {
-            "cart_data": request.session["cart_data_obj"],
-            "totalcartitems": len(request.session["cart_data_obj"]),
-            "cart_total_amount": cart_total_amount,
-        },
-    )
-    return JsonResponse(
-        {"data": context, "totalcartitems": len(request.session["cart_data_obj"])}
-    )
+        # Calculate totals
+        if "cart_data_obj" in request.session:
+            for p_id, item in request.session["cart_data_obj"].items():
+                item_total_amount = int(item["qty"]) * float(item["price"])
+                cart_total_amount += item_total_amount
+                item_total_amounts[p_id] = item_total_amount
+
+        context = render_to_string(
+            "async/cart-list.html",
+            {
+                "cart_data": request.session["cart_data_obj"],
+                "totalcartitems": len(request.session["cart_data_obj"]),
+                "cart_total_amount": cart_total_amount,
+                "item_total_amounts": item_total_amounts,  # Pass each item's total amount
+            },
+        )
+
+        return JsonResponse(
+            {
+                "data": context,
+                "totalcartitems": len(request.session["cart_data_obj"]),
+                "item_total_amounts": item_total_amounts,  # Return each item's total amount
+            }
+        )
+
 
 
 @login_required
@@ -515,6 +532,10 @@ def ajax_contact_form(request):
     data = {"bool": True, "message": "Message Sent Successfully"}
 
     return JsonResponse({"data": data})
+
+
+def blog(request):
+    return render(request, "blog.html")
 
 
 def about_us(request):

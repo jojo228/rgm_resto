@@ -5,14 +5,14 @@ from userauths.models import User, Profile
 
 class UserRegisterForm(UserCreationForm):
     username = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Username"})
+        widget=forms.TextInput(attrs={"placeholder": "Nom d'utilisateur", "class": "form-control"})
     )
-    email = forms.EmailField(widget=forms.EmailInput(attrs={"placeholder": "Email"}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"placeholder": "Email", "class": "form-control"}))
     password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"placeholder": "Password"})
+        widget=forms.PasswordInput(attrs={"placeholder": "Mot de passe", "class": "form-control"})
     )
     password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"placeholder": "Confirm Password"})
+        widget=forms.PasswordInput(attrs={"placeholder": "Confirmer Mot de passe", "class": "form-control"})
     )
 
     class Meta:
@@ -24,8 +24,8 @@ class ProfileForm(forms.ModelForm):
     full_name = forms.CharField(
         widget=forms.TextInput(attrs={"placeholder": "Full Name"})
     )
-    bio = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Bio"}))
-    phone = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Phone"}))
+    bio = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Bio", "class": "form-control"}))
+    phone = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Phone", "class": "form-control"}))
 
     class Meta:
         model = Profile

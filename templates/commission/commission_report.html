@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commission Report</title>
+</head>
+<body>
+    <h1>Commission Report</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Sales Person</th>
+                <th>Sale Date</th>
+                <th>Commission Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commission in commissions %}
+            <tr>
+                <td>{{ commission.customer.user.username }}</td>
+                <td>{{ commission.date }}</td>
+                <td>${{ commission.commission_amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
