@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RGM Food</title>
     <!-- favicon  -->
-    <link rel="shortcut icon" href="{% static 'assets/images/icon/fav.svg' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'assets/images/icon/favicon_rgm.png' %}" type="image/x-icon">
 
     <!-- font awesome cdn link  -->
 
@@ -131,7 +131,7 @@
 
 
                             <div class="text">
-                                <a href="mailto:Quomodosoft@gmail.com">Quomodosoft@gmail.com</a>
+                                <a href="mailto:rgmfood@rewards.com">rgmfood@rewards.com</a>
                             </div>
                         </div>
                     </div>
@@ -159,15 +159,14 @@
 
                             <div class="nav-main">
                                 <div class="logo">
-                                    <a href="{% url 'core:index' %}"> <img src="./assets/images/logo/footer-logo.svg"
-                                            alt="logo"></a>
+                                    <a href="{% url 'core:index' %}"> <img src="{% static 'assets/images/icon/favicon_rgm.png' %}" alt="logo" style="width: 20%; height: 20%;"></a>
                                 </div>
 
                                 <div class="menu">
                                     <ul>
                                         <li><a href="{% url 'core:index' %}">Accueil</a></li>
                                         <li><a href="{% url 'core:product-list' %}">Menu</a></li>
-                                        <li><a href="{% url 'core:about_us' %}">A Propos</a></li>
+                                        <li><a href="{% url 'core:about_us' %}">Propos</a></li>
                                         <li><a href="{% url 'core:contact' %}">Contact</a></li>
                                         <li><a href="{% url 'core:blog' %}">Blog</a></li>
                                     </ul>
@@ -178,8 +177,9 @@
 
                             <div class="nav-btn-main">
                                 <div class="nav-btn-one">
-                                    <input type="email" class="form-control" id="exampleFormControlInput1"
-                                        placeholder="Search food">
+                                    <form action="{% url 'core:search' %}" method="GET">
+                                    <input type="text" class="form-control" name="q" id="exampleFormControlInput1"
+                                        placeholder="Recherche">
 
                                     <div class="nav-search">
                                         <button type="submit">
@@ -193,11 +193,12 @@
                                             </span>
                                         </button>
                                     </div>
+                                    </form>
 
                                 </div>
 
                                 <div class="nav-btn-two">
-                                    <a href="dashboard-wishlist.html">
+                                    <a href="#">
                                         <div class="love">
                                             <span>
                                                 <svg width="28" height="28" viewBox="0 0 28 28" fill="none"
@@ -267,6 +268,8 @@
 
                                                 <div class="cart-dropdown-sub-total-btn">
                                                     <a href="{% url 'core:cart' %}" class="main-btn-four">Voir le panier</a>
+                                                </div>
+                                                <div class="cart-dropdown-sub-total-btn">
                                                     <a href="{% url 'core:checkout' %}" class="main-btn-four">Passez à la caisse</a>
                                                 </div>
 
@@ -279,10 +282,10 @@
 
 
 
-
+                                    {% if request.user.is_authenticated %}
                                     <!-- login korar por aita show hobe  -->
 
-                                    <!-- <div class="love user">
+                                    <div class="love user">
                                         <div class="click" data-name="profile-dropdown">
 
                                         </div>
@@ -299,12 +302,15 @@
 
                                         <div class="profile-dropdown header-dropdown" id="profile-dropdown">
                                             <div class="profile-dropdown-img">
-                                                <img src="./assets/images/small/profile-dropdown.png" alt="img">
+                                                {% if request.user.profile.image %}
+                                                <img src="{{ user.profile.image.url }}" style="width: 50px; height: 50px;" alt="img">
+                                                {% else %}
+                                                <img src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg" style="width: 150px; object-fit: cover; border-radius:50%; height:150px;" alt="">
+                                                {% endif %}
                                             </div>
 
                                             <div class="profile-dropdown-text">
-                                                <a href="#">AJOY Sarker</a>
-                                                <p>user id #054501</p>
+                                                <a href="#">{{request.user|title}}</a>
                                             </div>
 
 
@@ -312,7 +318,7 @@
                                             <div class="profile-dropdown-menu">
                                                 <ul>
                                                     <li>
-                                                        <a href="dashboard-edit-profile.html">
+                                                        <a href="{% url 'core:dashboard' %}">
                                                             <span>
                                                                 <svg width="24" height="24" viewBox="0 0 24 24"
                                                                     fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -322,12 +328,12 @@
                                                                         stroke-linejoin="round" />
                                                                 </svg>
                                                             </span>
-                                                            Edit Profile
+                                                            Tableau de bord
 
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a href="dashboard-address-reordering.html">
+                                                        <a href="{% url 'core:orders' %}">
                                                             <span>
                                                                 <svg width="24" height="24" viewBox="0 0 24 24"
                                                                     fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -346,38 +352,11 @@
                                                                 </svg>
                                                             </span>
 
-                                                            Order & Reordering
+                                                            Mes commandes
                                                         </a>
                                                     </li>
-                                                    <li>
-                                                        <a href="#">
-                                                            <span>
-                                                                <svg width="24" height="24" viewBox="0 0 24 24"
-                                                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <path
-                                                                        d="M17.3726 8.17276C20.0986 9.39695 22 12.1611 22 15.375V18.75C22 19.9926 21.0051 21 19.7778 21H13.1111C10.2084 21 7.73898 19.1217 6.82379 16.5M17.3726 8.17276C16.6711 5.20566 14.0344 3 10.8889 3H9.77778C5.48223 3 2 6.52576 2 10.875V14.25C2 15.4926 2.99492 16.5 4.22222 16.5H6.82379M17.3726 8.17276C17.4922 8.67875 17.5556 9.20688 17.5556 9.75C17.5556 13.4779 14.5708 16.5 10.8889 16.5H6.82379"
-                                                                        stroke-width="1.5" stroke-linejoin="round" />
-                                                                </svg>
-                                                            </span>
-
-                                                            Chat
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="dashboard-address.html">
-                                                            <span>
-                                                                <svg width="24" height="24" viewBox="0 0 24 24"
-                                                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <circle cx="12" cy="11" r="3" stroke-width="1.5" />
-                                                                    <path
-                                                                        d="M21 10.8889C21 15.7981 15.375 22 12 22C8.625 22 3 15.7981 3 10.8889C3 5.97969 7.02944 2 12 2C16.9706 2 21 5.97969 21 10.8889Z"
-                                                                        stroke-width="1.5" />
-                                                                </svg>
-                                                            </span>
-
-                                                            Address
-                                                        </a>
-                                                    </li>
+                                                    
+                                                    
                                                     <li>
                                                         <a href="#">
                                                             <span>
@@ -392,7 +371,7 @@
                                                                 </svg>
                                                             </span>
 
-                                                            Change Password
+                                                            Changer Mot de Passe
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -400,7 +379,7 @@
                                             <div class="profile-dropdown-menu profile-dropdown-menu-two ">
                                                 <ul>
                                                     <li>
-                                                        <a href="dashboard-edit-profile.html">
+                                                        <a href="{% url 'userauths:profile-update' %}">
                                                             <span>
                                                                 <svg width="24" height="24" viewBox="0 0 24 24"
                                                                     fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -409,12 +388,12 @@
                                                                         fill="#000929" />
                                                                 </svg>
                                                             </span>
-                                                            Edit Profile
+                                                            Editer Profil
 
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a href="dashboard-address-reordering.html">
+                                                        <a href="{% url 'userauths:sign-out' %}">
                                                             <span>
                                                                 <svg width="24" height="24" viewBox="0 0 24 24"
                                                                     fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -428,7 +407,7 @@
                                                                 </svg>
                                                             </span>
 
-                                                            Logout
+                                                            Se déconnecter
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -443,7 +422,9 @@
 
 
 
-                                    </div> -->
+                                    </div>
+
+                               {% endif %}
                                     
                                 </div>
 
@@ -451,12 +432,14 @@
                             </div>
 
 
-
+                            {% if not request.user.is_authenticated %}
 
                             <div class="nav-login-btn-main">
-                                <a href="{% url 'userauths:sign-in' %}" class="main-btn-four">Se connecter</a>
+                                <a href="{% url 'userauths:sign-in' %}" class="main-btn-four">Connexion</a>
                                 <a href="{% url 'userauths:sign-up' %}" class="main-btn">S'inscrire</a>
                             </div>
+
+                            {% endif %}
 
 
 
@@ -513,7 +496,6 @@
 
 
     
-    {% block main %}
     <main>
         
         
@@ -844,7 +826,7 @@
                                     <div class="featured-item-img-overlay">
                                         <div class="featured-item-img-over-text">
                                             <div class="left-text">
-                                                <a href="./dashboard-wishlist.html" class="icon">
+                                                <a href="#" class="icon">
                                                     <span>
                                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                             xmlns="http://www.w3.org/2000/svg">
@@ -998,7 +980,7 @@
 
                     <div class="col-lg-6 col-md-12">
                         <div class="process-head" data-aos="fade-up">
-                            <h2>The Process of Crafting your Dining Experience</h2>
+                            <h2>Le processus de création de votre expérience culinaire</h2>
                         </div>
 
                         <div class="process-item-box">
@@ -1022,8 +1004,8 @@
                                 </div>
 
                                 <div class="text">
-                                    <h3>Set your location</h3>
-                                    <p>A high quality solution beautifully food for customers</p>
+                                    <h3>Définissez votre emplacement</h3>
+                                    <p>Qualité parfaitement adaptée aux besoins des clients</p>
                                 </div>
 
                                 <div class="process-item-right-img">
@@ -1050,8 +1032,8 @@
                                 </div>
 
                                 <div class="text">
-                                    <h3>Select Food</h3>
-                                    <p>A high quality solution beautifully food for customers</p>
+                                    <h3>Faites Votre Choix</h3>
+                                    <p>Qualité parfaitement adaptée aux besoins des clients</p>
                                 </div>
 
                                 <div class="process-item-right-img">
@@ -1084,8 +1066,8 @@
                                 </div>
 
                                 <div class="text">
-                                    <h3>Pay Cash or Online</h3>
-                                    <p>Providing an upscale and elegant ambiance for ..</p>
+                                    <h3>Payer En Espèces Ou En Ligne</h3>
+                                    <p>Offrant une ambiance haut de gamme et élégante</p>
                                 </div>
 
                                 <div class="process-item-right-img">
@@ -1124,8 +1106,8 @@
                                 </div>
 
                                 <div class="text">
-                                    <h3>Delivery or Pickup</h3>
-                                    <p>Allowing customers to easily book tables through</p>
+                                    <h3>Livraison ou Sur Place</h3>
+                                    <p>Permettre aux clients de réserver facilement des tables</p>
                                 </div>
 
                                 <div class="process-item-right-img">
@@ -1148,7 +1130,7 @@
 
 
 
-        <section class="popular s-padding">
+        <!-- <section class="popular s-padding">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
@@ -1751,7 +1733,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
 
 
 
@@ -1766,7 +1748,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="customer-head mb-48px">
-                            <h2>What’s Our Customer Say</h2>
+                            <h2>Ce Que Disent Nos Clients</h2>
                         </div>
                     </div>
                 </div>
@@ -1779,9 +1761,9 @@
                                 <img src="./assets/images/icon/customer-icon.png" alt="icon">
                             </div>
                             <div class="customer-item-text">
-                                <p>"An absolute foodie's paradise! The flavors at
-                                    ReservQ are a symphony of delight. Every bite tells a story of passion and skill. A
-                                    must-visit for anyone seeking beyond compare."</p>
+                                <p>"Un véritable paradis pour les gourmands ! Les saveurs de
+RGM Food sont une symphonie de délices. Chaque bouchée raconte une histoire de passion et de savoir-faire. Un
+incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                             </div>
                         </div>
 
@@ -1811,9 +1793,9 @@
                                 <img src="./assets/images/icon/customer-icon.png" alt="icon">
                             </div>
                             <div class="customer-item-text">
-                                <p>"An absolute foodie's paradise! The flavors at
-                                    ReservQ are a symphony of delight. Every bite tells a story of passion and skill. A
-                                    must-visit for anyone seeking beyond compare."</p>
+                                <p>"Un véritable paradis pour les gourmands ! Les saveurs de
+RGM Food sont une symphonie de délices. Chaque bouchée raconte une histoire de passion et de savoir-faire. Un
+incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                             </div>
                         </div>
 
@@ -1843,9 +1825,9 @@
                                 <img src="./assets/images/icon/customer-icon.png" alt="icon">
                             </div>
                             <div class="customer-item-text">
-                                <p>"An absolute foodie's paradise! The flavors at
-                                    ReservQ are a symphony of delight. Every bite tells a story of passion and skill. A
-                                    must-visit for anyone seeking beyond compare."</p>
+                                <p>"Un véritable paradis pour les gourmands ! Les saveurs de
+RGM Food sont une symphonie de délices. Chaque bouchée raconte une histoire de passion et de savoir-faire. Un
+incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                             </div>
                         </div>
 
@@ -1875,9 +1857,9 @@
                                 <img src="./assets/images/icon/customer-icon.png" alt="icon">
                             </div>
                             <div class="customer-item-text">
-                                <p>"An absolute foodie's paradise! The flavors at
-                                    ReservQ are a symphony of delight. Every bite tells a story of passion and skill. A
-                                    must-visit for anyone seeking beyond compare."</p>
+                                <p>"Un véritable paradis pour les gourmands ! Les saveurs de
+RGM Food sont une symphonie de délices. Chaque bouchée raconte une histoire de passion et de savoir-faire. Un
+incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                             </div>
                         </div>
 
@@ -1907,9 +1889,9 @@
                                 <img src="./assets/images/icon/customer-icon.png" alt="icon">
                             </div>
                             <div class="customer-item-text">
-                                <p>"An absolute foodie's paradise! The flavors at
-                                    ReservQ are a symphony of delight. Every bite tells a story of passion and skill. A
-                                    must-visit for anyone seeking beyond compare."</p>
+                                <p>"Un véritable paradis pour les gourmands ! Les saveurs de
+RGM Food sont une symphonie de délices. Chaque bouchée raconte une histoire de passion et de savoir-faire. Un
+incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                             </div>
                         </div>
 
@@ -1939,9 +1921,9 @@
                                 <img src="./assets/images/icon/customer-icon.png" alt="icon">
                             </div>
                             <div class="customer-item-text">
-                                <p>"An absolute foodie's paradise! The flavors at
-                                    ReservQ are a symphony of delight. Every bite tells a story of passion and skill. A
-                                    must-visit for anyone seeking beyond compare."</p>
+                                <p>"Un véritable paradis pour les gourmands ! Les saveurs de
+RGM Food sont une symphonie de délices. Chaque bouchée raconte une histoire de passion et de savoir-faire. Un
+incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                             </div>
                         </div>
 
@@ -1973,14 +1955,14 @@
 
 
         <!-- faq part-star -->
-        {% endblock main %}
+        
 
         <section class="faq s-padding">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-6 col-md-12" data-aos="fade-left">
                         <div class="faq-head">
-                            <h2>Foodie FAQ: Your Culinary Queries Answered</h2>
+                            <h2>RGM Food FAQ: Les Réponses À Vos Questions Culinaires</h2>
                         </div>
 
 
@@ -2065,13 +2047,13 @@
                         <div class="row">
                             <div class="col-lg-8">
                                 <div class="faq-img  ">
-                                    <img src="./assets/images/thumb/faq-1.png" class="w-100" alt="thumb">
+                                    <img src="{% static 'assets/images/thumb/faq-1.png' %}" class="w-100" alt="thumb">
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="faq-img">
                                     <div class="faq-img-two">
-                                        <img src="./assets/images/thumb/faq-2.png" alt="thumb">
+                                        <img src="{% static 'assets/images/thumb/faq-2.png' %}" alt="thumb">
                                         <div class="faq-img-overlay">
                                             <div class="faq-img-overlay-text">
                                                 <h2>
@@ -2098,7 +2080,7 @@
                             <div class="col-lg-4">
                                 <div class="faq-img img-mt">
                                     <div class="faq-img-two">
-                                        <img src="./assets/images/thumb/faq-3.png" alt="thumb">
+                                        <img src="{% static 'assets/images/thumb/faq-3.png' %}" alt="thumb">
                                         <div class="faq-img-overlay faq-img-overlay-two ">
                                             <div class="faq-img-overlay-text">
                                                 <h2>
@@ -2126,7 +2108,7 @@
                                 <div class="faq-img  ">
 
                                     <div class="img-animetion">
-                                        <img src="./assets/images/thumb/faq-4.png" alt="thumb">
+                                        <img src="{% static 'assets/images/thumb/faq-4.png' %}" alt="thumb">
                                     </div>
 
                                 </div>
@@ -2205,13 +2187,12 @@
                 <div class="col-lg-4 col-md-12" data-aos="fade-right">
                     <div class="footer-logo">
                         <div class="logo">
-                            <img src="./assets/images/logo/footer-logo.svg" alt="logo">
+                            <img src="{% static 'assets/images/logo/rgm.png' %}" alt="logo" style="width: 100%; height: 120px;">
                         </div>
                     </div>
 
                     <div class="footer-text">
-                        <h4>At ReservQ, we invite you to embark on a journey of taste and delight.Our tables are more
-                            than just places.</h4>
+                        <h4>09 BP 9256, Amadahomé, à côté de la pharmacie IRIS, Lomé-Togo</h4>
                     </div>
 
                     <div class="footer-icon">
@@ -2232,26 +2213,26 @@
                         <div class="col-lg-3 col-md-3" data-aos="fade-right" data-aos-delay="100">
                             <div class="quick-line-item">
                                 <div class="quick-line-item-head">
-                                    <h3>Quick Link</h3>
+                                    <h3>Liens Rapide</h3>
                                 </div>
 
 
                                 <div class="quick-line-menu">
                                     <ul>
                                         <li>
-                                            <a href="dashboard.html">My Account</a>
+                                            <a href="{% url 'core:dashboard' %}">Mon Compte</a>
                                         </li>
                                         <li>
-                                            <a href="about.html">About Us</a>
+                                            <a href="{% url 'core:about_us' %}">A Propos</a>
                                         </li>
                                         <li>
-                                            <a href="contact.html">Store Locator</a>
+                                            <a href="{% url 'core:contact' %}">Localisation</a>
                                         </li>
                                         <li>
-                                            <a href="contact.html">Delivery</a>
+                                            <a href="{% url 'core:contact' %}">Livraison</a>
                                         </li>
                                         <li>
-                                            <a href="contact.html">Pickup</a>
+                                            <a href="{% url 'core:contact' %}">Take A Way</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -2261,19 +2242,19 @@
                         <div class="col-lg-3 col-md-3" data-aos="fade-right" data-aos-delay="200">
                             <div class="quick-line-item">
                                 <div class="quick-line-item-head">
-                                    <h3>Terms & Privacy</h3>
+                                    <h3>Termes & Polices</h3>
                                 </div>
 
                                 <div class="quick-line-menu">
                                     <ul>
                                         <li>
-                                            <a href="trust-safety.html">Trust & Safety</a>
+                                            <a href="{% url 'core:purchase_guide' %}">Confiance et sécurité</a>
                                         </li>
                                         <li>
-                                            <a href="terms-service.html">Terms of Service</a>
+                                            <a href="{% url 'core:terms_of_service' %}">Termes & Conditions</a>
                                         </li>
                                         <li>
-                                            <a href="privacy-policy.html">Privacy Policy</a>
+                                            <a href="{% url 'core:privacy_policy' %}">Police Privé</a>
                                         </li>
 
                                     </ul>
@@ -2283,21 +2264,21 @@
                         <div class="col-lg-6 col-md-6" data-aos="fade-right" data-aos-delay="300">
                             <div class="quick-line-item">
                                 <div class="quick-line-item-head">
-                                    <h3>Subscribe our Newsletter</h3>
+                                    <h3>Souscrire A Notre Newsletter</h3>
                                 </div>
 
                                 <div class="quick-line-btn">
                                     <div class="icon">
-                                        <img src="./assets/images/icon/sms.png" alt="icon">
+                                        <img src="{% static 'assets/images/icon/sms.png' %}" alt="icon">
                                     </div>
-                                    <input type="email" class="form-control" id="exampleFormControlInput6"
-                                        placeholder="Your email">
-                                    <a href="#" class="main-btn-four">Subscribe</a>
+                                    <input type="number" class="form-control" id="exampleFormControlInput6"
+                                        placeholder="Votre contact">
+                                    <a href="#" class="main-btn-four">Souscrire</a>
                                 </div>
 
 
                                 <div class="quick-line-btn-text">
-                                    <h6>We accept Payment methods:</h6>
+                                    <h6>Nous acceptons ces méthodes de paiement:</h6>
                                 </div>
 
                                 <div class="quick-line-btn-img">

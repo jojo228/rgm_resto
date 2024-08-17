@@ -74,7 +74,7 @@ def profile_update(request):
             new_form.user = request.user
             new_form.save()
             messages.success(request, "Profile Updated Successfully.")
-            return redirect("core:dashboard")
+            return redirect("userauths:profile-update")
     else:
         form = ProfileForm(instance=profile)
 
@@ -83,4 +83,4 @@ def profile_update(request):
         "profile": profile,
     }
 
-    return render(request, "profile-edit.html", context)
+    return render(request, "dashboard-edit-profile.html", context)

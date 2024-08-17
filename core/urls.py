@@ -25,7 +25,7 @@ urlpatterns = [
     # Cart Page URL
     path("cart/", cart_view, name="cart"),
     # Delete ITem from Cart
-    path("delete-from-cart/", delete_item_from_cart, name="delete-from-cart"),
+    path("delete-from-cart/", delete_cart_item, name="delete-from-cart"),
     # Update  Cart
     path("update-cart/", update_cart, name="update-cart"),
     # Checkout  URL
@@ -38,6 +38,7 @@ urlpatterns = [
     path("payment-failed/", payment_failed_view, name="payment-failed"),
     # Dahboard URL
     path("dashboard/", customer_dashboard, name="dashboard"),
+    path("orders/", customer_orders, name="orders"),
     # Order Detail URL
     path("dashboard/order/<int:id>", order_detail, name="order-detail"),
     # Making address defauly

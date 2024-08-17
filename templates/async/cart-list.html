@@ -1,3 +1,4 @@
+{% load static %}
 
     <main>
 
@@ -143,7 +144,7 @@
 
                                 <tbody>
                                     {% for product_id, item in cart_data.items %}
-                                    <tr>
+                                    <tr id="cart-item-{{ product_id }}">
                                         <td class="details-control">
                                             <input class="form-check-input" type="checkbox" id="checkboxNoLabel-0"
                                                 value="" aria-label="...">
@@ -165,16 +166,19 @@
                                         </td>
                                         <td>
                                             <div class="tabel-text">
-                                                <h6>{{item.price|floatformat:0}}f</h6>
+                                                <h6 class="product-price-{{product_id}}">{{item.price}}f</h6>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="tabel-text-btn">
-                                                <div class="grid">
-                                                    <button class="btn btn-minus "><i
+                                                <div class="grid calc">
+                                                    <button class="btn btn-minus decrement-qty" data-item="{{product_id}}"><i
                                                             class="fa-solid fa-minus"></i></button>
-                                                    <div class="column product-qty">2</div>
-                                                    <button class="btn btn-plus "><i
+                                                    <div class="column product-qty">
+                                                        <input type="number" class="column product-qty-{{ product_id }}" style="width: 25px; border: none;" value="{{ item.qty }}" min="1">
+                                                    </div>
+                                                    
+                                                    <button class="btn btn-plus increment-qty" data-item="{{product_id}}"><i
                                                             class="fa-solid fa-plus"></i></button>
                                                 </div>
                                             </div>
@@ -182,9 +186,8 @@
                                         </td>
                                         <td>
                                             <div class="tabel-text">
-                                                {% for product_id, item in cart_data.items %}
-                                                <div class="product-total">{{ item_total_amounts|default:8880 }}</div>
-                                                {% endfor %}
+                                                <div class="product-total-{{product_id}}">{% widthratio item.price 1 item.qty %}</div>
+                                                <!-- <td class="total-amount">{{cart_total_amount|floatformat:0}}f</td> -->
                                             </div>
                                         </td>
                                         <td>
@@ -198,7 +201,7 @@
                                                                 fill="white" />
                                                         </svg></span> View
                                                 </button>
-                                                <button type="button" class="view-btn delete-product" data-product="{{ product_id }}">
+                                                <button type="button" class="view-btn delete-item" data-item="{{ product_id }}" onclick="deleteCartItem('{{ product_id }}')">
                                                     <span>
                                                         <svg width="17" height="20" viewBox="0 0 17 20" fill="none"
                                                             xmlns="http://www.w3.org/2000/svg">
@@ -468,8 +471,8 @@
 
 
                         <div class="tabel-main-btn">
-                            <a href="shopping-cart-02.html" class="main-btn-six">
-                                Process to Checkout
+                            <a href="{% url 'core:checkout' %}" class="main-btn-six">
+                                Passer à la caisse
                                 <span>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -499,7 +502,133 @@
 
 
 
+        
+    
+    
+        <script>
+            // Increment quantity
+        $(document).on("click", ".increment-qty", function () {
+            var _pId = $(this).attr("data-item");
+            var _qtyInput = $(this).closest("tr").find(".product-qty-" + _pId);
+            var currentQty = parseInt(_qtyInput.val());
+            var newQty = currentQty + 1;
+            _qtyInput.val(newQty); // Update the quantity value in the DOM
+            updateItemTotalAmount(_pId); // Update the total amount for the item
+            updateTotalAmount(); // Update the overall total amount
+            updateCartData(_pId, newQty); // Update the cart session with the new quantity
+        });
+        
+        // Decrement quantity
+        $(document).on("click", ".decrement-qty", function () {
+            var _pId = $(this).attr("data-item");
+            var _qtyInput = $(this).closest("tr").find(".product-qty-" + _pId);
+            var currentQty = parseInt(_qtyInput.val());
+            if (currentQty > 1) {
+                var newQty = currentQty - 1;
+                _qtyInput.val(newQty); // Update the quantity value in the DOM
+                updateItemTotalAmount(_pId); // Update the total amount for the item
+                updateTotalAmount(); // Update the overall total amount
+                updateCartData(_pId, newQty); // Update the cart session with the new quantity
+            }
+        });
+        
+        // Update the total amount for the specified item
+        function updateItemTotalAmount(productId) {
+            var quantity = parseInt($(".product-qty-" + productId).val());
+            var price = parseFloat($(".product-price-" + productId).text());
+            var totalAmount = quantity * price;
+            $(".product-total-" + productId).text(totalAmount.toFixed(0) + "f");
+        }
+        
+        function updateTotalAmount() {
+            var totalAmount = 0;
 
+            $(".calc").each(function () {
+                var productId = $(this).find(".delete-item").attr("data-item");
+                var quantityElement = $(".product-qty-" + productId);
+                var priceElement = $(".product-price-" + productId);
+                
+                var quantity = parseInt(quantityElement.val());
+                var price = parseFloat(priceElement.text());
+
+                // Log the elements and their values for debugging
+                console.log("Product ID:", productId);
+                console.log("Quantity Element:", quantityElement);
+                console.log("Price Element:", priceElement);
+                console.log("Quantity Value:", quantity);
+                console.log("Price Value:", price);
+
+                if (!isNaN(quantity) && !isNaN(price)) {
+                    totalAmount += quantity * price;
+                } else {
+                    console.log("Invalid number detected. Quantity or Price is NaN");
+                }
+            });
+
+            $(".total-amount").text(totalAmount.toFixed(0) + "f");
+        }
+
+        
+
+        
+        function updateCartData(productId, newQty) {
+            var url = "/update-cart/";
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    product_id: productId,
+                    quantity: newQty,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    console.log("Cart session updated successfully.");
+                    updateTotalAmount(); // Ensure total amount is updated after AJAX success
+                    deleteCartItem();
+                },
+                error: function (error) {
+                    console.log("Error updating cart session:", error);
+                }
+            });
+        }
+
+
+        // Delete Cart Item
+        function deleteCartItem(productId) {
+
+            $.ajax({
+                type: "POST",
+                url: "/delete-from-cart/",
+                data: {
+                    product_id: productId,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        console.log("Item deleted successfully from the cart.");
+
+                        // Remove the deleted item from the DOM
+                        var deletedItem = $("#cart-item-" + productId);
+                        deletedItem.remove();
+
+                        // Update the total amount
+                        updateTotalAmount(response.cart_total_amount);
+
+                        // Perform any additional actions after deleting the item from the cart
+                    } else {
+                        console.log("Error deleting item from the cart:", response.error);
+                    }
+                },
+                error: function (error) {
+                    console.log("Error deleting item from the cart:", error);
+                }
+            });
+        }
+
+           
+        
+        </script>
 
 
 

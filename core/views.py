@@ -240,35 +240,28 @@ def cart_view(request):
         return redirect("core:index")
 
 
-def delete_item_from_cart(request):
-    product_id = str(request.GET["id"])
-    if "cart_data_obj" in request.session:
-        if product_id in request.session["cart_data_obj"]:
-            cart_data = request.session["cart_data_obj"]
-            del request.session["cart_data_obj"][product_id]
-            request.session["cart_data_obj"] = cart_data
+def delete_cart_item(request):
+    if request.method == "POST":
+        product_id = request.POST.get("product_id")
 
-    cart_total_amount = 0
-    if "cart_data_obj" in request.session:
-        for p_id, item in request.session["cart_data_obj"].items():
-            cart_total_amount += int(item["qty"]) * float(item["price"])
+        if "cart_data_obj" in request.session:
+            cart_data = request.session.get("cart_data_obj", {})
 
-    context = render_to_string(
-        "async/cart-list.html",
-        {
-            "cart_data": request.session["cart_data_obj"],
-            "totalcartitems": len(request.session["cart_data_obj"]),
-            "cart_total_amount": cart_total_amount,
-        },
-    )
-    return JsonResponse(
-        {"data": context, "totalcartitems": len(request.session["cart_data_obj"])}
-    )
+            if product_id in cart_data:
+                del cart_data[product_id]
+                request.session["cart_data_obj"] = cart_data
+                request.session.modified = True  # Mark the session as modified
+
+                return JsonResponse({"success": True})
+
+        return JsonResponse({"success": False, "error": "Product not found in cart"})
+
+    return JsonResponse({"success": False, "error": "Invalid request method"})
 
 
 
 
-@csrf_exempt
+# @csrf_exempt
 def update_cart(request):
     product_id = request.POST.get("id")
     product_qty = request.POST.get("qty")
@@ -281,14 +274,12 @@ def update_cart(request):
                 request.session["cart_data_obj"] = cart_data
 
         cart_total_amount = 0
-        item_total_amounts = {}
 
         # Calculate totals
         if "cart_data_obj" in request.session:
             for p_id, item in request.session["cart_data_obj"].items():
-                item_total_amount = int(item["qty"]) * float(item["price"])
-                cart_total_amount += item_total_amount
-                item_total_amounts[p_id] = item_total_amount
+                cart_total_amount += int(item["qty"]) * float(item["price"])
+                # cart_total_amount += item_total_amount
 
         context = render_to_string(
             "async/cart-list.html",
@@ -296,7 +287,6 @@ def update_cart(request):
                 "cart_data": request.session["cart_data_obj"],
                 "totalcartitems": len(request.session["cart_data_obj"]),
                 "cart_total_amount": cart_total_amount,
-                "item_total_amounts": item_total_amounts,  # Pass each item's total amount
             },
         )
 
@@ -304,7 +294,6 @@ def update_cart(request):
             {
                 "data": context,
                 "totalcartitems": len(request.session["cart_data_obj"]),
-                "item_total_amounts": item_total_amounts,  # Return each item's total amount
             }
         )
 
@@ -444,6 +433,52 @@ def customer_dashboard(request):
         "total_orders": total_orders,
     }
     return render(request, "dashboard.html", context)
+
+
+@login_required
+def customer_orders(request):
+    orders_list = CartOrder.objects.filter(user=request.user).order_by("-id")
+    address = Address.objects.filter(user=request.user)
+
+    orders = (
+        CartOrder.objects.annotate(month=ExtractMonth("order_date"))
+        .values("month")
+        .annotate(count=Count("id"))
+        .values("month", "count")
+    )
+    month = []
+    total_orders = []
+
+    for i in orders:
+        month.append(calendar.month_name[i["month"]])
+        total_orders.append(i["count"])
+
+    if request.method == "POST":
+        address = request.POST.get("address")
+        mobile = request.POST.get("mobile")
+
+        new_address = Address.objects.create(
+            user=request.user,
+            address=address,
+            mobile=mobile,
+        )
+        messages.success(request, "Address Added Successfully.")
+        return redirect("core:dashboard")
+    else:
+        print("Error")
+
+    user_profile = Profile.objects.get(user=request.user)
+    print("user profile is: #########################", user_profile)
+
+    context = {
+        "user_profile": user_profile,
+        "orders": orders,
+        "orders_list": orders_list,
+        "address": address,
+        "month": month,
+        "total_orders": total_orders,
+    }
+    return render(request, "dashboard-orders.html", context)
 
 
 def order_detail(request, id):
