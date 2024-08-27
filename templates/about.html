@@ -20,18 +20,14 @@
     <link rel="stylesheet" href="{% static 'css/slick.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <script src="{% static 'assets/js/jquery-3.6.3.min.js' %}"></script>
+
 </head>
 
 <body>
 
 
-    <!-- ===== Loader Start ===== -->
-    <div class="preloader-wrap">
-        <div class="loader">
-            <img src="{% static 'assets/images/thumb/loader-2.gif' %}" alt="loader">
-        </div>
-    </div>
-    <!-- ===== Loader End ===== -->
+    
 
 
 
@@ -187,69 +183,35 @@
                                     </a>
 
 
-                                    <div class="love cart">
-                                        <div class="click" data-name="cart-dropdown">
-
-                                        </div>
-                                        <span>
-                                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6.99967 4.66536H20.9997C23.577 4.66536 25.6663 6.7547 25.6663 9.33203V15.1654C25.6663 17.7427 23.577 19.832 20.9997 19.832H11.6663C9.08901 19.832 6.99967 17.7427 6.99967 15.1654V4.66536ZM6.99967 4.66536C6.99967 3.3767 5.95501 2.33203 4.66634 2.33203H2.33301"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path
-                                                    d="M12.833 23.918C12.833 24.8845 12.0495 25.668 11.083 25.668C10.1165 25.668 9.33301 24.8845 9.33301 23.918C9.33301 22.9515 10.1165 22.168 11.083 22.168C12.0495 22.168 12.833 22.9515 12.833 23.918Z"
-                                                    stroke-width="1.5" />
-                                                <path
-                                                    d="M23.333 23.918C23.333 24.8845 22.5495 25.668 21.583 25.668C20.6165 25.668 19.833 24.8845 19.833 23.918C19.833 22.9515 20.6165 22.168 21.583 22.168C22.5495 22.168 23.333 22.9515 23.333 23.918Z"
-                                                    stroke-width="1.5" />
-                                                <path d="M16.333 9.33203L16.333 15.1654" stroke-width="1.5"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M19.2503 12.25L13.417 12.25" stroke-width="1.5"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            <span class="cart-length cart-items-count">{{ request.session.cart_data_obj|length }}</span>
-                                        </span>
-
-
-                                        <div class="cart-dropdown header-dropdown" id="cart-dropdown">
-
-
-                                            <div class="cart-dropdown-text">
-                                                <div class="text">
-                                                    <h3>Panier</h3>
-                                                </div>
-
-                                                <div class="cart-dropdown-btn">
-                                                    <button type="button" class="close-btn" aria-label="Close">
-                                                        <span>
-                                                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg">
-                                                                <path
-                                                                    d="M9.24309 0.757865L0.757812 9.24315M9.24309 9.24309L0.757812 0.757812"
-                                                                    stroke="#9EA3AE" stroke-width="1.5"
-                                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                                            </svg>
-                                                        </span>
-
-                                                    </button>
-                                                </div>
-                                            </div>
+                                    <a href="{% url 'core:cart' %}">
+                                        <div class="love cart">
+                                            <div class="click" data-name="cart-dropdown"></div>
+                                            <span>
+                                                <svg width="28" height="28" viewBox="0 0 28 28" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M6.99967 4.66536H20.9997C23.577 4.66536 25.6663 6.7547 25.6663 9.33203V15.1654C25.6663 17.7427 23.577 19.832 20.9997 19.832H11.6663C9.08901 19.832 6.99967 17.7427 6.99967 15.1654V4.66536ZM6.99967 4.66536C6.99967 3.3767 5.95501 2.33203 4.66634 2.33203H2.33301"
+                                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path
+                                                        d="M12.833 23.918C12.833 24.8845 12.0495 25.668 11.083 25.668C10.1165 25.668 9.33301 24.8845 9.33301 23.918C9.33301 22.9515 10.1165 22.168 11.083 22.168C12.0495 22.168 12.833 22.9515 12.833 23.918Z"
+                                                        stroke-width="1.5" />
+                                                    <path
+                                                        d="M23.333 23.918C23.333 24.8845 22.5495 25.668 21.583 25.668C20.6165 25.668 19.833 24.8845 19.833 23.918C19.833 22.9515 20.6165 22.168 21.583 22.168C22.5495 22.168 23.333 22.9515 23.333 23.918Z"
+                                                        stroke-width="1.5" />
+                                                    <path d="M16.333 9.33203L16.333 15.1654" stroke-width="1.5"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M19.2503 12.25L13.417 12.25" stroke-width="1.5"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                                <span class="cart-length cart-items-count">{{ request.session.cart_data_obj|length }}</span>
+                                            </span>
                                             
-                                            <div class="cart-dropdown-sub-total">
-
-                                                <div class="cart-dropdown-sub-total-btn">
-                                                    <a href="{% url 'core:cart' %}" class="main-btn-four">Voir le panier</a>
-                                                </div>
-                                                <div class="cart-dropdown-sub-total-btn">
-                                                    <a href="{% url 'core:checkout' %}" class="main-btn-four">Passez à la caisse</a>
-                                                </div>
-
-                                            </div>
-
-
+                                            
+    
+    
+                                            
                                         </div>
-                                    </div>
+                                    </a>
 
 
 
@@ -1971,7 +1933,6 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
 
 
 
-    <script src="{% static 'assets/js/jquery-3.6.3.min.js' %}"></script>
     <script src="{% static 'assets/js/venobox.min.js' %}"></script>
     <script src="{% static 'assets/js/aos.js' %}"></script>
     <script src="{% static 'assets/js/slick.min.js' %}"></script>
@@ -2053,8 +2014,8 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
             type: "POST",
             url: url,
             data: {
-                product_id: productId,
-                quantity: newQty,
+                id: productId,
+                qty: newQty,
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             success: function (response) {

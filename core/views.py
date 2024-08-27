@@ -1,10 +1,14 @@
+import json
 from django.http import JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ObjectDoesNotExist
+from django.views.generic import View
 from regex import E
 from requests import session
+import requests
 from taggit.models import Tag
 from core.models import (
+    Payment,
     Product,
     Category,
     CartOrder,
@@ -15,14 +19,13 @@ from core.models import (
     Address,
 )
 from userauths.models import ContactUs, Profile
-from core.forms import ProductReviewForm
+from core.forms import CheckoutForm, ProductReviewForm
 from django.template.loader import render_to_string
 from django.contrib import messages
 
 from django.urls import reverse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-from paypal.standard.forms import PayPalPaymentsForm
 from django.contrib.auth.decorators import login_required
 
 import calendar
@@ -33,13 +36,13 @@ from django.core import serializers
 
 def index(request):
     # bannanas = Product.objects.all().order_by("-id")
-    products = Product.objects.filter( product_status="published").order_by("-id")   
+    products = Product.objects.all().order_by("-id")   
 
     return render(request, "index.html", locals())
 
 
 def product_list_view(request):
-    products = Product.objects.filter(product_status="published").order_by("-id")
+    products = Product.objects.all().order_by("-id")
     tags = Tag.objects.all().order_by("-id")[:6]
 
     context = {
@@ -117,7 +120,7 @@ def product_detail_view(request, pid):
 
 
 def tag_list(request, tag_slug=None):
-    products = Product.objects.filter(product_status="published").order_by("-id")
+    products = Product.objects.all().order_by("-id")
 
     tag = None
     if tag_slug:
@@ -174,7 +177,7 @@ def filter_product(request):
     max_price = request.GET["max_price"]
 
     products = (
-        Product.objects.filter(product_status="published").order_by("-id").distinct()
+        Product.objects.all().order_by("-id").distinct()
     )
 
     products = products.filter(price__gte=min_price)
@@ -258,29 +261,55 @@ def delete_cart_item(request):
 
     return JsonResponse({"success": False, "error": "Invalid request method"})
 
+import logging
 
 
-
-# @csrf_exempt
 def update_cart(request):
-    product_id = request.POST.get("id")
-    product_qty = request.POST.get("qty")
-
     if request.method == "POST":
+        product_id = request.POST.get("id")
+        product_qty = request.POST.get("qty")
+
+        # Debugging: Print received data
+        print(f"Received update_cart request: product_id={product_id}, product_qty={product_qty}")
+
         if "cart_data_obj" in request.session:
             cart_data = request.session["cart_data_obj"]
+            print("Current cart_data_obj keys:", list(cart_data.keys()))
+
+            # Ensure product_id is a string
+            product_id = str(product_id)
+            print(f"Formatted product_id (as string): {product_id}")
+
             if product_id in cart_data:
-                cart_data[product_id]["qty"] = product_qty
-                request.session["cart_data_obj"] = cart_data
+                try:
+                    # Convert product_qty to integer
+                    new_qty = int(product_qty)
+                    cart_data[product_id]["qty"] = new_qty
+                    request.session["cart_data_obj"] = cart_data
+                    request.session.modified = True
 
+                    # Debugging: Confirm update
+                    print(f"Updated cart_data_obj: {request.session['cart_data_obj']}")
+                except ValueError:
+                    print(f"Invalid quantity value: {product_qty}")
+            else:
+                print(f"Product_id {product_id} not found in cart_data_obj")
+        else:
+            print("No cart_data_obj in session")
+
+        # Calculate cart total
         cart_total_amount = 0
-
-        # Calculate totals
         if "cart_data_obj" in request.session:
             for p_id, item in request.session["cart_data_obj"].items():
-                cart_total_amount += int(item["qty"]) * float(item["price"])
-                # cart_total_amount += item_total_amount
+                try:
+                    qty = int(item["qty"])
+                    price = float(item["price"])
+                    cart_total_amount += qty * price
+                except (ValueError, KeyError):
+                    print(f"Invalid item data: {item}")
+        print(f"Calculated cart_total_amount: {cart_total_amount}")
 
+        # Render updated cart list
         context = render_to_string(
             "async/cart-list.html",
             {
@@ -296,97 +325,299 @@ def update_cart(request):
                 "totalcartitems": len(request.session["cart_data_obj"]),
             }
         )
+    else:
+        return JsonResponse({"success": False, "error": "Invalid request method"})
+
+def is_valid_form(values):
+    valid = True
+    for field in values:
+        if field == '':
+            valid = False
+    return valid
 
 
-
-@login_required
-def checkout_view(request):
-    cart_total_amount = 0
-    total_amount = 0
-
-    # Checking if cart_data_obj session exists
-    if "cart_data_obj" in request.session:
-        # Getting total amount for Paypal Amount
-        for p_id, item in request.session["cart_data_obj"].items():
-            total_amount += int(item["qty"]) * float(item["price"])
-
-        # Create ORder Object
-        order = CartOrder.objects.create(user=request.user, price=total_amount)
-
-        # Getting total amount for The Cart
-        for p_id, item in request.session["cart_data_obj"].items():
-            cart_total_amount += int(item["qty"]) * float(item["price"])
-
-            cart_order_products = CartOrderProducts.objects.create(
-                order=order,
-                invoice_no="INVOICE_NO-" + str(order.id),  # INVOICE_NO-5,
-                item=item["title"],
-                image=item["image"],
-                qty=item["qty"],
-                price=item["price"],
-                total=float(item["qty"]) * float(item["price"]),
-            )
-
-        host = request.get_host()
-        paypal_dict = {
-            "business": settings.PAYPAL_RECEIVER_EMAIL,
-            "amount": cart_total_amount,
-            "item_name": "Order-Item-No-" + str(order.id),
-            "invoice": "INVOICE_NO-" + str(order.id),
-            "currency_code": "USD",
-            "notify_url": "http://{}{}".format(host, reverse("core:paypal-ipn")),
-            "return_url": "http://{}{}".format(host, reverse("core:payment-completed")),
-            "cancel_url": "http://{}{}".format(host, reverse("core:payment-failed")),
-        }
-
-        paypal_payment_button = PayPalPaymentsForm(initial=paypal_dict)
-
-        # cart_total_amount = 0
-        # if 'cart_data_obj' in request.session:
-        #     for p_id, item in request.session['cart_data_obj'].items():
-        #         cart_total_amount += int(item['qty']) * float(item['price'])
-
+class CheckoutView(View):
+    def get(self, *args, **kwargs):
         try:
-            active_address = Address.objects.get(user=request.user, status=True)
-        except:
-            messages.warning(
-                request, "There are multiple addresses, only one should be activated."
-            )
-            active_address = None
+            cart_total_amount = 0
+            total_amount = 0
 
-        return render(
-            request,
-            "checkout.html",
-            {
-                "cart_data": request.session["cart_data_obj"],
-                "totalcartitems": len(request.session["cart_data_obj"]),
-                "cart_total_amount": cart_total_amount,
-                "paypal_payment_button": paypal_payment_button,
-                "active_address": active_address,
-            },
-        )
+            # Checking if cart_data_obj session exists
+            if "cart_data_obj" in self.request.session:
+                # Getting total amount for Paypal Amount
+                for p_id, item in self.request.session["cart_data_obj"].items():
+                    total_amount += int(item["qty"]) * float(item["price"])
+            
+
+                # Calculate cart total amount and total items
+                cart_data = self.request.session.get("cart_data_obj", {})
+                cart_total_amount = sum(int(item["qty"]) * float(item["price"]) for item in cart_data.values())
+                totalcartitems = len(cart_data)
+
+                order = CartOrder.objects.create(user=self.request.user, ordered=False, price=cart_total_amount)
+                form = CheckoutForm()
+
+                # Getting total amount for The Cart
+                for p_id, item in self.request.session["cart_data_obj"].items():
+                    cart_total_amount += int(item["qty"]) * float(item["price"])
+
+                    cart_order_products = CartOrderProducts.objects.create(
+                        user=self.request.user,
+                        order=order,
+                        # invoice_no="INVOICE_NO-" + str(order.id),  # INVOICE_NO-5,
+                        item=item["title"],
+                        image=item["image"],
+                        qty=item["qty"],
+                        price=item["price"],
+                        total=float(item["qty"]) * float(item["price"]),
+                    )
+
+                context = {
+                    'form': form,
+                    'order': order,
+                    'DISPLAY_COUPON_FORM': True,  # Assuming you have a coupon form
+                    "cart_data": cart_data,
+                    "totalcartitems": totalcartitems,
+                    "cart_total_amount": cart_total_amount,
+                }
+
+                # Get default shipping address
+                shipping_address_qs = Address.objects.filter(
+                    user=self.request.user,
+                    address_type='S',
+                    default=True
+                )
+                if shipping_address_qs.exists():
+                    context.update({'default_shipping_address': shipping_address_qs[0]})
+
+                # Get default billing address
+                billing_address_qs = Address.objects.filter(
+                    user=self.request.user,
+                    address_type='B',
+                    default=True
+                )
+                if billing_address_qs.exists():
+                    context.update({'default_billing_address': billing_address_qs[0]})
+
+                return render(self.request, "checkout.html", context)
+
+        except ObjectDoesNotExist:
+            messages.info(self.request, "You do not have an active order")
+            return redirect("core:checkout")
+
+    def post(self, *args, **kwargs):
+
+        shipping_address = self.request.POST.get('shipping_address')
+        shipping_address2 = self.request.POST.get('shipping_address2')
+        shipping_country = self.request.POST.get('shipping_country')
+        shipping_zip = self.request.POST.get('shipping_zip')
+        billing_address = self.request.POST.get('billing_address')
+        billing_address2 = self.request.POST.get('billing_address2')
+        billing_country = self.request.POST.get('billing_country')
+        billing_zip = self.request.POST.get('billing_zip')
+        same_billing_address = self.request.POST.get('same_billing_address')
+        use_default_shipping = self.request.POST.get('use_default_shipping')
+        set_default_shipping = self.request.POST.get('set_default_shipping')
+        use_default_billing = self.request.POST.get('use_default_billing')
+        set_default_billing = self.request.POST.get('set_default_billing')
 
 
-@login_required
-def payment_completed_view(request):
-    cart_total_amount = 0
-    if "cart_data_obj" in request.session:
-        for p_id, item in request.session["cart_data_obj"].items():
-            cart_total_amount += int(item["qty"]) * float(item["price"])
-    return render(
-        request,
-        "payment-completed.html",
-        {
-            "cart_data": request.session["cart_data_obj"],
-            "totalcartitems": len(request.session["cart_data_obj"]),
-            "cart_total_amount": cart_total_amount,
-        },
-    )
+
+        form = CheckoutForm(self.request.POST or None)
+        try:
+            order = CartOrder.objects.filter(user=self.request.user, ordered=False).first()
+            if form.is_valid():
+                # Calculate cart total amount and total items
+                cart_data = self.request.session.get("cart_data_obj", {})
+                cart_total_amount = sum(int(item["qty"]) * float(item["price"]) for item in cart_data.values())
+                totalcartitems = len(cart_data)
 
 
-@login_required
-def payment_failed_view(request):
-    return render(request, "payment-failed.html")
+
+                # Shipping Address Handling
+                use_default_shipping = form.cleaned_data.get('use_default_shipping')
+                if use_default_shipping:
+                    shipping_address_qs = Address.objects.filter(
+                        user=self.request.user,
+                        address_type='S',
+                        default=True
+                    )
+                    if shipping_address_qs.exists():
+                        shipping_address = shipping_address_qs[0]
+                        order.shipping_address = shipping_address
+                        order.save()
+                    else:
+                        messages.info(self.request, "No default shipping address available")
+                        return redirect('core:checkout')
+                else:
+                    shipping_address1 = form.cleaned_data.get('shipping_address')
+                    shipping_address2 = form.cleaned_data.get('shipping_address2')
+                    shipping_country = form.cleaned_data.get('shipping_country')
+                    shipping_zip = form.cleaned_data.get('shipping_zip')
+
+                    if is_valid_form([shipping_address1, shipping_country, shipping_zip]):
+                        shipping_address = Address(
+                            user=self.request.user,
+                            street_address=shipping_address1,
+                            apartment_address=shipping_address2,
+                            country=shipping_country,
+                            zip=shipping_zip,
+                            address_type='S'
+                        )
+                        shipping_address.save()
+                        order.shipping_address = shipping_address
+                        # order.save()
+
+                        set_default_shipping = form.cleaned_data.get('set_default_shipping')
+                        if set_default_shipping:
+                            shipping_address.default = True
+                            shipping_address.save()
+                    else:
+                        messages.info(self.request, "Please fill in the required shipping address fields")
+
+                # Billing Address Handling
+                use_default_billing = form.cleaned_data.get('use_default_billing')
+                same_billing_address = form.cleaned_data.get('same_billing_address')
+
+                if same_billing_address:
+                    billing_address = shipping_address
+                    billing_address.pk = None  # Create a new instance
+                    billing_address.save()
+                    billing_address.address_type = 'B'
+                    billing_address.save()
+                    order.billing_address = billing_address
+                    order.save()
+
+                elif use_default_billing:
+                    billing_address_qs = Address.objects.filter(
+                        user=self.request.user,
+                        address_type='B',
+                        default=True
+                    )
+                    if billing_address_qs.exists():
+                        billing_address = billing_address_qs[0]
+                        order.billing_address = billing_address
+                        order.save()
+                    else:
+                        messages.info(self.request, "No default billing address available")
+                        return redirect('core:checkout')
+                else:
+                    billing_address1 = form.cleaned_data.get('billing_address')
+                    billing_address2 = form.cleaned_data.get('billing_address2')
+                    billing_country = form.cleaned_data.get('billing_country')
+                    billing_zip = form.cleaned_data.get('billing_zip')
+
+                    if is_valid_form([billing_address1, billing_country, billing_zip]):
+                        billing_address = Address(
+                            user=self.request.user,
+                            street_address=billing_address1,
+                            apartment_address=billing_address2,
+                            country=billing_country,
+                            zip=billing_zip,
+                            address_type='B'
+                        )
+                        billing_address.save()
+                        order.billing_address = billing_address
+                        order.save()
+
+                        set_default_billing = form.cleaned_data.get('set_default_billing')
+                        if set_default_billing:
+                            billing_address.default = True
+                            billing_address.save()
+                    else:
+                        messages.info(self.request, "Please fill in the required billing address fields")
+
+                # Intégration de CinetPay
+                transaction_id = f"order_{order.id}"
+                amount = cart_total_amount
+                data = {
+                    "apikey": settings.CINETPAY_API_KEY,
+                    "site_id": settings.CINETPAY_SITE_ID,
+                    "transaction_id": transaction_id,
+                    "amount": amount,
+                    "currency": "XOF",
+                    "description": f"Payment for order {order.id}",
+                    "return_url": self.request.build_absolute_uri('/payment/success/'),
+                    "cancel_url": self.request.build_absolute_uri('/payment/fail/'),
+                    "notify_url": self.request.build_absolute_uri('/payment/notify/'),
+                    "customer_name": self.request.user.username,
+                    "customer_email": self.request.user.email,
+                    "customer_phone_number": "0000000000",
+                    'order_id': '12233',
+                }
+                print(data)
+
+                # Appel à l'API CinetPay pour initialiser le paiement
+                response = requests.post("https://api.cinetpay.com/v1/payment", data=data)
+                response.raise_for_status()  # Lève une exception pour les erreurs HTTP
+
+                # Vérifier la réponse
+                response_data = response.json()
+                print(response_data)  # Affiche la réponse pour vérification
+
+                if response.status_code == 200:
+                    payment_data = response.json()
+                    payment_url = payment_data['data']['payment_url']
+
+                    # Enregistrer le paiement dans la base de données
+                    Payment.objects.create(
+                        user=self.request.user,
+                        order=order,
+                        transaction_id=transaction_id,
+                        amount=amount,
+                        status='pending'
+                    )
+
+                    return JsonResponse({'payment_url': payment_url})
+                else:
+                    messages.error(self.request, "Erreur lors de l'initialisation du paiement.")
+                    return redirect('core:checkout')
+
+            return redirect('core:checkout')
+
+        except ObjectDoesNotExist:
+            messages.warning(self.request, "Vous n'avez pas de commande active.")
+            return redirect("core:orders")
+
+
+
+
+@csrf_exempt
+def cinetpay_notify(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            transaction_id = data.get('transaction_id')
+            status = data.get('status')
+            payment = Payment.objects.get(transaction_id=transaction_id)
+
+            if status == '00':
+                # Paiement réussi
+                payment.status = 'COMPLETED'
+                payment.order.ordered = True  # Marquer la commande comme complète
+                payment.order.save()
+            else:
+                # Paiement échoué
+                payment.status = 'FAILED'
+            
+            payment.save()
+            return JsonResponse({'status': 'success'}, status=200)
+
+        except Payment.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Payment not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+    
+
+def payment_success(request):
+    messages.success(request, "Votre paiement a été effectué avec succès.")
+    return render(request, 'payment_success.html')
+
+def payment_fail(request):
+    messages.error(request, "Votre paiement a échoué.")
+    return render(request, 'payment_fail.html')
 
 
 @login_required
@@ -489,6 +720,8 @@ def order_detail(request, id):
         "order_items": order_items,
     }
     return render(request, "order-detail.html", context)
+
+
 
 
 def make_address_default(request):

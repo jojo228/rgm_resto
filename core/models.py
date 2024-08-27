@@ -1,15 +1,23 @@
+from django.conf import settings
 from django.db import models
 from shortuuid.django_fields import ShortUUIDField
 from django.utils.html import mark_safe
 from userauths.models import User
 from taggit.managers import TaggableManager
 from ckeditor_uploader.fields import RichTextUploadingField
+from django_countries.fields import CountryField
+
 
 
 STATUS_CHOICE = (
     ("processing", "Processing"),
     ("shipped", "Shipped"),
     ("delivered", "Delivered"),
+)
+
+ADDRESS_CHOICES = (
+    ('B', 'Billing'),
+    ('S', 'Shipping'),
 )
 
 
@@ -65,7 +73,6 @@ class Product(models.Model):
     price = models.FloatField()
     old_price = models.FloatField()
     tags = TaggableManager(blank=True)
-    product_status = models.CharField(choices=STATUS, max_length=10, default="draft")    
     sku = ShortUUIDField(unique=True, length=4, max_length=10, prefix="sku", alphabet="1234567890")
     date = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(null=True, blank=True)
@@ -106,9 +113,11 @@ class CartOrder(models.Model):
     price = models.FloatField()
     paid_status = models.BooleanField(default=False, null=True, blank=True)
     order_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    product_status = models.CharField(
-        choices=STATUS_CHOICE, max_length=30, default="processing"
-    )
+    ordered = models.BooleanField(default=False)
+    shipping_address = models.ForeignKey(
+        'Address', related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
+    billing_address = models.ForeignKey(
+        'Address', related_name='billing_address', on_delete=models.SET_NULL, blank=True, null=True)
     sku = ShortUUIDField(
         null=True,
         blank=True,
@@ -123,9 +132,10 @@ class CartOrder(models.Model):
 
 
 class CartOrderProducts(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    ordered = models.BooleanField(default=False)
     order = models.ForeignKey(CartOrder, on_delete=models.CASCADE)
-    invoice_no = models.CharField(max_length=200)
-    product_status = models.CharField(max_length=200)
     item = models.CharField(max_length=200)
     image = models.CharField(max_length=200)
     qty = models.IntegerField(default=0)
@@ -139,6 +149,18 @@ class CartOrderProducts(models.Model):
         return mark_safe(
             '<img src="/media/%s" width="50" height="50" />' % (self.image)
         )
+    
+
+class Payment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    order = models.ForeignKey('CartOrder', on_delete=models.CASCADE)
+    transaction_id = models.CharField(max_length=100, unique=True)
+    amount = models.FloatField()
+    status = models.CharField(max_length=20, default='pending')  # pending, successful, failed
+    payment_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Payment {self.transaction_id} - {self.status}"
 
 
 ############################################## Product Revew, wishlists, Address ##################################
@@ -179,10 +201,17 @@ class wishlist_model(models.Model):
 
 
 class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    mobile = models.CharField(max_length=300, null=True)
-    address = models.CharField(max_length=100, null=True)
-    status = models.BooleanField(default=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    street_address = models.CharField(max_length=100)
+    apartment_address = models.CharField(max_length=100)
+    country = CountryField(multiple=False)
+    zip = models.CharField(max_length=100)
+    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
+    default = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username
 
     class Meta:
-        verbose_name_plural = "Address"
+        verbose_name_plural = 'Addresses'

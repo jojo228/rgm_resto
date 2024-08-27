@@ -47,42 +47,113 @@
 
         <section class="shopping-cart-two">
             <div class="container">
+                <form method="POST" class="card-body" id="checkout_form">
+                    {% csrf_token %}
                 <div class="row">
                     <div class="col-lg-8 col-md-6 ">
-                        <div class="delivery-time">
-                            <div class="delivery-map">
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.095111337159!2d90.36396657592897!3d23.81521668628379!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c1cad41818e3%3A0x1dea3ec2f7a32054!2sQuomodoSoft!5e0!3m2!1sen!2sbd!4v1695898211446!5m2!1sen!2sbd"
-                                    width="380" height="380" style="border:0;" allowfullscreen="" loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        
+              
+                            <h3>Adresse de livraison</h3>
+              
+                            <div class='hideable_shipping_form'>
+              
+                              <div class="md-form mb-5">
+                                <label for="shipping_address" class="form-label">Adresse</label>
+                                <input type='text' placeholder='Quartier cacavelli, Rue..' id='shipping_address' name='shipping_address' class='form-control' />
+                              </div>
+              
+                              <div class="md-form mb-5">
+                                <label for="shipping_address2" class="form-label">Adresse 2 (optionel)</label>
+                                <input type='text' placeholder='Appartement N˚...' id='shipping_address2' name='shipping_address2' class='form-control' />
+                              </div>
+              
+                              <div class="row">
+                                <div class="col-lg-4 col-md-12 mb-4">
+                                  <label for="country">Pays</label>
+                                  {{ form.shipping_country }}
+                                  <div class="invalid-feedback">
+                                    Veuillez sélectionner un pays valide.
+                                  </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                  <label for="shipping_zip">Zip</label>
+                                  <input type='text' placeholder='Zip code' id='shipping_zip' name='shipping_zip' class='form-control' />
+                                  <div class="invalid-feedback">
+                                    Code postal requis.
+                                  </div>
+                                </div>
+                              </div>
+              
+                              <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="same_billing_address" id="same_billing_address">
+                                <label class="custom-control-label" for="same_billing_address">L'adresse de facturation est la même que mon adresse d'expédition</label>
+                              </div>
+                              <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="set_default_shipping" id="set_default_shipping">
+                                <label class="custom-control-label" for="set_default_shipping">Enregistrer en tant qu'adresse d'expédition par défaut</label>
+                              </div>
+              
                             </div>
-
-
-                            <div class="delivery-from">
-
-                                <div class="delivery-text">
-                                    <h4>Perfect Time for Delivery</h4>
-                                </div>
-                                <div class="delivery-from-item">
-                                    <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected>Today</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
-                                </div>
-                                <div class="delivery-from-item delivery-from-item-two ">
-                                    <label for="exampleFormControlInput1" class="form-label">Time Schedule</label>
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected>03:30 PM - 04:00 PM</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
-                                </div>
+              
+                            {% if default_shipping_address %}
+                            <div class="custom-control custom-checkbox">
+                              <input type="checkbox" class="custom-control-input" name="use_default_shipping" id="use_default_shipping">
+                              <label class="custom-control-label" for="use_default_shipping">Utiliser l'adresse de livraison par défaut: {{ default_shipping_address.street_address|truncatechars:10 }}</label>
                             </div>
-                        </div>
+                            {% endif %}
+              
+                            <hr>
+              
+                            <h3>Adresse de facturation</h3>
+              
+                            <div class='hideable_billing_form'>
+                              <div class="md-form mb-5">
+                                <label for="billing_address" class="">Adresse</label>
+                                <input type='text' placeholder='Quartier cacavelli, Rue..' id='billing_address' name='billing_address' class='form-control' />
+                              </div>
+              
+                              <div class="md-form mb-5">
+                                <label for="billing_address2" class="form-label">Adresse 2 (optionel)</label>
+                                <input type='text' placeholder='Appartement N˚...' id='billing_address2' name='billing_address2' class='form-control' />
+                              </div>
+              
+                              <div class="row">
+                                <div class="col-lg-4 col-md-12 mb-4">
+                                  <label for="country">Pays</label>
+                                  {{ form.billing_country }}
+                                  <div class="invalid-feedback">
+                                    Veuillez sélectionner un pays valide.
+                                  </div>
+                                </div>
+              
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                  <label for="billing_zip">Zip</label>
+                                  <input type='text' placeholder='Zip code' id='billing_zip' name='billing_zip' class='form-control' />
+                                  <div class="invalid-feedback">
+                                    Code postal requis.
+                                  </div>
+                                </div>
+              
+                              </div>
+              
+                              <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="set_default_billing" id="set_default_billing">
+                                <label class="custom-control-label" for="set_default_billing">Enregistrer en tant qu'adresse de facturation par défaut</label>
+                              </div>
+              
+                            </div>
+              
+                            {% if default_billing_address %}
+                            <div class="custom-control custom-checkbox">
+                              <input type="checkbox" class="custom-control-input" name="use_default_billing" id="use_default_billing">
+                              <label class="custom-control-label" for="use_default_billing">Utilisez l'adresse de facturation par défaut: {{ default_billing_address.street_address|truncatechars:10 }}</label>
+                            </div>
+                            {% endif %}
+                            <hr>
+              
+                            
+              
+                          
                     </div>
 
 
@@ -105,8 +176,8 @@
                                             </div>
                                             <div class="cart-summary-box-text-two">
                                                 <h4>{{ item.title }}</h4>
-                                                <h5><span>Size :</span> Small</h5>
-                                                <p>{{ item.price }}f</p>
+                                                <h6><span>{{item.price}} x </span> {{item.qty}}</h6>
+                                                <p>{% widthratio item.price 1 item.qty %}f</p>
                                             </div>
                                         </div>
                                     </a>
@@ -155,12 +226,12 @@
                                     <div class="shopping-cart-list shopping-cart-list-btm ">
                                         <div class="shopping-cart-list-text">
                                             <h4>Total</h4>
-                                            <a href="#">{{cart_total_amount|floatformat:0}}</a>
+                                            <a href="#">{{cart_total_amount|floatformat:0}}f</a>
                                         </div>
                                     </div>
 
                                     <div class="shopping-cart-list-btn">
-                                        <a href="shopping-cart-address.html" class="main-btn-six">
+                                        <button class="main-btn-six" id="pay_button">
                                             Payez
 
                                             <span>
@@ -170,7 +241,7 @@
                                                         stroke-linecap="round" stroke-linejoin="round" />
                                                 </svg>
                                             </span>
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -193,6 +264,7 @@
 
 
                 </div>
+            </form>
             </div>
         </section>
 
@@ -217,4 +289,78 @@
 
     </main>
 
-    {% endblock %}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Ajouter un gestionnaire d'événements au bouton de paiement
+            $('#pay_button').on('click', function(event) {
+                event.preventDefault(); // Empêcher la redirection automatique
+    
+                // Récupérer les données du formulaire
+                var formData = {
+                    shipping_address: $('#shipping_address').val(),
+                    shipping_address2: $('#shipping_address2').val(),
+                    shipping_country: $('#id_shipping_country').val(),
+                    shipping_zip: $('#shipping_zip').val(),
+                    billing_address: $('#billing_address').val(),
+                    billing_address2: $('#billing_address2').val(),
+                    billing_country: $('#id_billing_country').val(),
+                    billing_zip: $('#billing_zip').val(),
+                    same_billing_address: $('#same_billing_address').is(':checked'),
+                    use_default_shipping: $('#use_default_shipping').is(':checked'),
+                    set_default_shipping: $('#set_default_shipping').is(':checked'),
+                    use_default_billing: $('#use_default_billing').is(':checked'),
+                    set_default_billing: $('#set_default_billing').is(':checked'),
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                };
+
+                console.log('FormData:', formData);  // Vérifier les données du formulaire
+    
+                // Envoyer la requête AJAX
+                $.ajax({
+                    url: "{% url 'core:checkout' %}",  // URL de la vue qui initialise le paiement
+                    method: "POST",
+                    data: formData,
+                    success: function(response) {
+                        console.log('Réponse reçue:', response);  // Vérifier la réponse
+                        if (response.payment_url) {
+                            window.location.href = response.payment_url;  // Rediriger vers CinetPay
+                        } else {
+                            alert('Erreur lors de l\'initialisation du paiement.');
+                        }
+                    },
+                    error: function(error) {
+                        alert('Une erreur est survenue.');
+                    }
+                });
+            });
+        });
+    </script>
+    
+
+<script>
+    var hideable_shipping_form = $('.hideable_shipping_form');
+    var hideable_billing_form = $('.hideable_billing_form');
+    
+    var use_default_shipping = document.querySelector("input[name=use_default_shipping]");
+    var use_default_billing = document.querySelector("input[name=use_default_billing]");
+    
+    use_default_shipping.addEventListener('change', function() {
+      if (this.checked) {
+        hideable_shipping_form.hide();
+      } else {
+        hideable_shipping_form.show();
+      }
+    })
+    
+    use_default_billing.addEventListener('change', function() {
+      if (this.checked) {
+        hideable_billing_form.hide();
+      } else {
+        hideable_billing_form.show();
+      }
+    })
+    
+    </script>
+
+{% endblock %}

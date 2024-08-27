@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'core',
     'userauths',
     'commission',
+    'django_countries',
 ]
 
 MIDDLEWARE = [
@@ -150,6 +151,11 @@ MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Default backend using the database
+SESSION_SAVE_EVERY_REQUEST = True  # Optionally save the session on every request
+SESSION_COOKIE_AGE = 1209600  # Two weeks, adjust as needed
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -184,3 +190,6 @@ CKEDITOR_CONFIGS = {
 
 PAYPAL_RECEIVER_EMAIL = ""
 PAYPAL_TEST = True
+
+CINETPAY_API_KEY = "129570728766b3c8ba7bd668.87591327"
+CINETPAY_SITE_ID = "5877794"

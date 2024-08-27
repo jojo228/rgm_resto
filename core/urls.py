@@ -29,13 +29,13 @@ urlpatterns = [
     # Update  Cart
     path("update-cart/", update_cart, name="update-cart"),
     # Checkout  URL
-    path("checkout/", checkout_view, name="checkout"),
+    path("checkout/", CheckoutView.as_view(), name="checkout"),
     # Paypal URL
     path("paypal/", include("paypal.standard.ipn.urls")),
     # Payment Successful
-    path("payment-completed/", payment_completed_view, name="payment-completed"),
-    # Payment Failed
-    path("payment-failed/", payment_failed_view, name="payment-failed"),
+    path('payment/notify/', cinetpay_notify, name='cinetpay_notify'),
+    path('payment/success/', payment_success, name='payment_success'),
+    path('payment/fail/', payment_fail, name='payment_fail'),
     # Dahboard URL
     path("dashboard/", customer_dashboard, name="dashboard"),
     path("orders/", customer_orders, name="orders"),

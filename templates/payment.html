@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Payment for Order #{{ order.id }}</h2>
+<p>Amount to be paid: {{ order.price }} XOF</p>
+<form id="payment-form" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Pay with CinetPay</button>
+</form>
+
+<script>
+    document.getElementById('payment-form').onsubmit = function(e) {
+        e.preventDefault();
+
+        fetch("{% url 'core:payment' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({}),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.payment_url) {
+                window.location.href = data.payment_url;
+            } else {
+                alert("Payment failed: " + data.error);
+            }
+        });
+    };
+</script>
+{% endblock %}

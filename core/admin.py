@@ -1,6 +1,7 @@
 from django.contrib import admin
 from core.models import (
     CartOrderProducts,
+    Payment,
     Product,
     Category,
     CartOrder,
@@ -17,14 +18,13 @@ class ProductImagesAdmin(admin.TabularInline):
 
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImagesAdmin]
-    list_editable = ["title", "price", "product_status"]
+    list_editable = ["title", "price"]
     list_display = [
         "user",
         "title",
         "product_image",
         "price",
         "category",
-        "product_status",
         "pid",
     ]
 
@@ -34,19 +34,18 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class CartOrderAdmin(admin.ModelAdmin):
-    list_editable = ["paid_status", "product_status", "sku"]
+    list_editable = ["paid_status",  "sku"]
     list_display = [
         "user",
         "price",
         "paid_status",
         "order_date",
-        "product_status",
         "sku",
     ]
 
 
 class CartOrderProductsAdmin(admin.ModelAdmin):
-    list_display = ["order", "invoice_no", "item", "image", "qty", "price", "total"]
+    list_display = ["order", "item", "image", "qty", "price", "total"]
 
 
 class ProductReviewAdmin(admin.ModelAdmin):
@@ -58,8 +57,17 @@ class wishlistAdmin(admin.ModelAdmin):
 
 
 class AddressAdmin(admin.ModelAdmin):
-    list_editable = ["address", "status"]
-    list_display = ["user", "address", "status"]
+    list_display = [
+        'user',
+        'street_address',
+        'apartment_address',
+        'country',
+        'zip',
+        'address_type',
+        'default'
+    ]
+    list_filter = ['default', 'address_type', 'country']
+    search_fields = ['user', 'street_address', 'apartment_address', 'zip']
 
 
 admin.site.register(Product, ProductAdmin)
@@ -69,3 +77,4 @@ admin.site.register(CartOrderProducts, CartOrderProductsAdmin)
 admin.site.register(ProductReview, ProductReviewAdmin)
 admin.site.register(wishlist_model, wishlistAdmin)
 admin.site.register(Address, AddressAdmin)
+admin.site.register(Payment)
