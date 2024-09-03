@@ -231,7 +231,7 @@
                                     </div>
 
                                     <div class="shopping-cart-list-btn">
-                                        <button class="main-btn-six" id="pay_button">
+                                        <a class="main-btn-six" id="pay_button">
                                             Payez
 
                                             <span>
@@ -241,7 +241,7 @@
                                                         stroke-linecap="round" stroke-linejoin="round" />
                                                 </svg>
                                             </span>
-                                        </button>
+                                          </a>
                                     </div>
                                 </div>
 
@@ -289,10 +289,10 @@
 
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
-            // Ajouter un gestionnaire d'événements au bouton de paiement
             $('#pay_button').on('click', function(event) {
                 event.preventDefault(); // Empêcher la redirection automatique
     
@@ -300,42 +300,45 @@
                 var formData = {
                     shipping_address: $('#shipping_address').val(),
                     shipping_address2: $('#shipping_address2').val(),
-                    shipping_country: $('#id_shipping_country').val(),
+                    shipping_country: $('#shipping_country').val(),
                     shipping_zip: $('#shipping_zip').val(),
                     billing_address: $('#billing_address').val(),
                     billing_address2: $('#billing_address2').val(),
-                    billing_country: $('#id_billing_country').val(),
+                    billing_country: $('#billing_country').val(),
                     billing_zip: $('#billing_zip').val(),
                     same_billing_address: $('#same_billing_address').is(':checked'),
                     use_default_shipping: $('#use_default_shipping').is(':checked'),
                     set_default_shipping: $('#set_default_shipping').is(':checked'),
                     use_default_billing: $('#use_default_billing').is(':checked'),
                     set_default_billing: $('#set_default_billing').is(':checked'),
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                    payment_option: $('input[name="payment_option"]:checked').val(),
                 };
-
-                console.log('FormData:', formData);  // Vérifier les données du formulaire
     
-                // Envoyer la requête AJAX
+                console.log('Données du formulaire:', formData); // Pour débogage
+    
                 $.ajax({
-                    url: "{% url 'core:checkout' %}",  // URL de la vue qui initialise le paiement
+                    url: "{% url 'core:payment_initialize' %}",
                     method: "POST",
                     data: formData,
+                    dataType: "json",
                     success: function(response) {
-                        console.log('Réponse reçue:', response);  // Vérifier la réponse
                         if (response.payment_url) {
-                            window.location.href = response.payment_url;  // Rediriger vers CinetPay
+                            window.location.href = response.payment_url; // Rediriger vers CinetPay
+                        } else if (response.error) {
+                            alert('Erreur: ' + response.error);
                         } else {
-                            alert('Erreur lors de l\'initialisation du paiement.');
+                            alert('Une erreur inconnue est survenue.');
                         }
                     },
-                    error: function(error) {
-                        alert('Une erreur est survenue.');
+                    error: function(xhr, status, error) {
+                        console.error('Erreur AJAX:', error);
+                        alert('Une erreur est survenue lors de l\'initialisation du paiement.');
                     }
                 });
             });
         });
     </script>
+    
     
 
 <script>

@@ -58,6 +58,3 @@ class PaymentForm(forms.Form):
     use_default = forms.BooleanField(required=False)
 
 
-from django import forms
-from .models import Address
-

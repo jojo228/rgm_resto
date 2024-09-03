@@ -151,9 +151,9 @@ MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Default backend using the database
-SESSION_SAVE_EVERY_REQUEST = True  # Optionally save the session on every request
-SESSION_COOKIE_AGE = 1209600  # Two weeks, adjust as needed
+#SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Default backend using the database
+#SESSION_SAVE_EVERY_REQUEST = True  # Optionally save the session on every request
+#SESSION_COOKIE_AGE = 1209600  # Two weeks, adjust as needed
 
 
 

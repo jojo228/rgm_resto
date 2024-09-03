@@ -30,3 +30,10 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ["full_name", "image", "bio", "phone"]
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Votre nom'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Votre email'}),
+            'tel': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Votre téléphone'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Votre message'}),
+        }

@@ -33,9 +33,9 @@ urlpatterns = [
     # Paypal URL
     path("paypal/", include("paypal.standard.ipn.urls")),
     # Payment Successful
-    path('payment/notify/', cinetpay_notify, name='cinetpay_notify'),
-    path('payment/success/', payment_success, name='payment_success'),
-    path('payment/fail/', payment_fail, name='payment_fail'),
+    path('payment/initialize/', PaymentInitializationView.as_view(), name='payment_initialize'),
+    path('payment/notify/', payment_notify, name='payment_notify'),
+    path('payment/return/', PaymentReturnView.as_view(), name='payment_return'),
     # Dahboard URL
     path("dashboard/", customer_dashboard, name="dashboard"),
     path("orders/", customer_orders, name="orders"),

@@ -526,98 +526,216 @@ class CheckoutView(View):
                             billing_address.save()
                     else:
                         messages.info(self.request, "Please fill in the required billing address fields")
+                
 
-                # Intégration de CinetPay
-                transaction_id = f"order_{order.id}"
-                amount = cart_total_amount
-                data = {
-                    "apikey": settings.CINETPAY_API_KEY,
-                    "site_id": settings.CINETPAY_SITE_ID,
-                    "transaction_id": transaction_id,
-                    "amount": amount,
-                    "currency": "XOF",
-                    "description": f"Payment for order {order.id}",
-                    "return_url": self.request.build_absolute_uri('/payment/success/'),
-                    "cancel_url": self.request.build_absolute_uri('/payment/fail/'),
-                    "notify_url": self.request.build_absolute_uri('/payment/notify/'),
-                    "customer_name": self.request.user.username,
-                    "customer_email": self.request.user.email,
-                    "customer_phone_number": "0000000000",
-                    'order_id': '12233',
-                }
-                print(data)
+                
 
-                # Appel à l'API CinetPay pour initialiser le paiement
-                response = requests.post("https://api.cinetpay.com/v1/payment", data=data)
-                response.raise_for_status()  # Lève une exception pour les erreurs HTTP
-
-                # Vérifier la réponse
-                response_data = response.json()
-                print(response_data)  # Affiche la réponse pour vérification
-
-                if response.status_code == 200:
-                    payment_data = response.json()
-                    payment_url = payment_data['data']['payment_url']
-
-                    # Enregistrer le paiement dans la base de données
-                    Payment.objects.create(
-                        user=self.request.user,
-                        order=order,
-                        transaction_id=transaction_id,
-                        amount=amount,
-                        status='pending'
-                    )
-
-                    return JsonResponse({'payment_url': payment_url})
-                else:
-                    messages.error(self.request, "Erreur lors de l'initialisation du paiement.")
-                    return redirect('core:checkout')
-
+               
             return redirect('core:checkout')
 
         except ObjectDoesNotExist:
             messages.warning(self.request, "Vous n'avez pas de commande active.")
             return redirect("core:orders")
+        
 
+import uuid
+from django.utils.decorators import method_decorator
+@method_decorator(csrf_exempt, name='dispatch')
+class PaymentInitializationView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            # Récupérer les données du formulaire
+            data = request.POST
+            shipping_address = data.get('shipping_address')
+            shipping_address2 = data.get('shipping_address2')
+            shipping_country = data.get('shipping_country')
+            shipping_zip = data.get('shipping_zip')
+            billing_address = data.get('billing_address')
+            billing_address2 = data.get('billing_address2')
+            billing_country = data.get('billing_country')
+            billing_zip = data.get('billing_zip')
+            same_billing_address = data.get('same_billing_address') == 'true'
+            use_default_shipping = data.get('use_default_shipping') == 'true'
+            set_default_shipping = data.get('set_default_shipping') == 'true'
+            use_default_billing = data.get('use_default_billing') == 'true'
+            set_default_billing = data.get('set_default_billing') == 'true'
+            payment_option = data.get('payment_option')
+
+            # Vous pouvez ajouter ici la logique pour sauvegarder ces informations dans votre base de données si nécessaire
+
+            # Calculer le montant total du panier
+            cart_data = request.session.get('cart_data_obj', {})
+            total_amount = sum(int(item['qty']) * float(item['price']) for item in cart_data.values())
+
+            if total_amount <= 0:
+                return JsonResponse({'error': 'Le montant total doit être supérieur à zéro.'}, status=400)
+
+            # Générer un identifiant unique pour la transaction
+            transaction_id = str(uuid.uuid4())
+
+            # Préparer les données pour l'API CinetPay
+            cinetpay_data = {
+                'apikey': settings.CINETPAY_API_KEY,
+                'site_id': settings.CINETPAY_SITE_ID,
+                'transaction_id': transaction_id,
+                'amount': str(total_amount),
+                'currency': 'XOF',
+                'channels': 'ALL',
+                'description': 'Paiement de commande',
+                'return_url': request.build_absolute_uri('/payment/return/'),
+                'notify_url': request.build_absolute_uri('/payment/notify/'),
+                'customer_name': request.user.username if request.user.is_authenticated else 'Anonymous',
+                'customer_email': request.user.email if request.user.is_authenticated else 'anonymous@example.com',
+                'customer_phone_number': '00000000',  # Remplacez par un numéro valide si disponible
+                'customer_address': shipping_address,
+                'customer_city': shipping_country,
+                'customer_country': shipping_country,
+            }
+
+            # Envoyer la requête à CinetPay
+            response = requests.post(
+                'https://api-checkout.cinetpay.com/v2/payment',
+                json=cinetpay_data
+            )
+
+            response_data = response.json()
+
+            if response.status_code == 200 and response_data.get('code') == '201':
+                payment_url = response_data['data']['payment_url']
+                # Vous pouvez sauvegarder les détails de la transaction ici si nécessaire
+                return JsonResponse({'payment_url': payment_url})
+            else:
+                error_message = response_data.get('description', 'Une erreur est survenue lors de l\'initialisation du paiement.')
+                return JsonResponse({'error': error_message}, status=400)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
 
 
 @csrf_exempt
-def cinetpay_notify(request):
+def payment_notify(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            transaction_id = data.get('transaction_id')
-            status = data.get('status')
-            payment = Payment.objects.get(transaction_id=transaction_id)
 
+            # Extraire les données importantes de la notification
+            transaction_id = data.get('cpm_trans_id')
+            amount = data.get('cpm_amount')
+            status = data.get('cpm_trans_status')
+
+            # Vérifiez que les données nécessaires sont présentes
+            if not transaction_id or not amount or not status:
+                return JsonResponse({'error': 'Missing transaction data.'}, status=400)
+
+            # Récupérer le paiement correspondant
+            try:
+                payment = Payment.objects.get(transaction_id=transaction_id)
+            except Payment.DoesNotExist:
+                return JsonResponse({'error': 'Transaction not found.'}, status=404)
+
+            # Mise à jour du statut en fonction du statut de la transaction
             if status == '00':
-                # Paiement réussi
                 payment.status = 'COMPLETED'
                 payment.order.ordered = True  # Marquer la commande comme complète
                 payment.order.save()
             else:
-                # Paiement échoué
                 payment.status = 'FAILED'
-            
+
             payment.save()
-            return JsonResponse({'status': 'success'}, status=200)
 
-        except Payment.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Payment not found'}, status=404)
+            return JsonResponse({'status': 'success'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data.'}, status=400)
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
-    
+            return JsonResponse({'error': str(e)}, status=500)
 
-def payment_success(request):
-    messages.success(request, "Votre paiement a été effectué avec succès.")
-    return render(request, 'payment_success.html')
+    return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
 
-def payment_fail(request):
-    messages.error(request, "Votre paiement a échoué.")
-    return render(request, 'payment_fail.html')
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PaymentReturnView(View):
+    def post(self, request, *args, **kwargs):
+        transaction_id = request.POST.get('transaction_id')
+        
+        if not transaction_id:
+            return JsonResponse({"error": "Transaction ID not provided."}, status=400)
+
+        # Configuration de l'API CinetPay
+        api_url = "https://api.cinetpay.com/v1/?method=checkPayStatus"
+        site_id = settings.CINETPAY_SITE_ID
+        api_key = settings.CINETPAY_API_KEY
+
+        # Préparation des données pour la requête à CinetPay
+        data = {
+            "apikey": api_key,
+            "site_id": site_id,
+            "transaction_id": transaction_id,
+        }
+
+        # Faire la requête à l'API de CinetPay
+        response = requests.post(api_url, json=data)
+        result = response.json()
+        print(result)
+
+        # Vérifiez que 'amount' et 'status' sont présents dans la réponse
+        amount = result.get('amount')
+        status = result.get('status')
+
+        if amount is None or status is None:
+            return JsonResponse({"error": "Invalid response from CinetPay. 'amount' or 'status' not found."}, status=400)
+
+        payment, created = Payment.objects.create(
+            transaction_id=transaction_id,
+            defaults={
+                'user': request.user,  # Relier le paiement à l'utilisateur
+                'amount': amount,
+                'status': status,
+            }
+        )
+
+        # Vérifier le statut de la réponse
+        if response.status_code == 200 and result.get('status') == '00':
+            # Paiement réussi
+            payment_status = "Success"
+            # Mettre à jour le statut du paiement dans votre base de données
+            Payment.objects.update_or_create(
+            transaction_id=transaction_id,
+            defaults={
+                'user': request.user,  # Relier le paiement à l'utilisateur
+                'amount': result['amount'],
+                'status': result['status'],
+            }
+        )
+
+            # Mise à jour du statut de la commande et des articles
+            cart_order = payment.order
+            cart_order.paid_status = True
+            cart_order.ordered = True
+            cart_order.save()
+
+            # Marquer les produits comme commandés
+            CartOrderProducts.objects.filter(order=cart_order).update(ordered=True)
+
+
+        else:
+            # Paiement échoué ou en attente
+            payment_status = "Failed"
+            Payment.objects.update_or_create(
+            transaction_id=transaction_id,
+            defaults={
+                'user': request.user,  # Relier le paiement à l'utilisateur
+                'amount': result['amount'],
+                'status': result['status'],
+            }
+        )
+
+        # Rediriger vers une page de confirmation de paiement avec le statut
+        return render(request, 'payment_return.html', {'payment_status': payment_status})
+
+
 
 
 @login_required
