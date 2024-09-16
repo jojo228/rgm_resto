@@ -1,5 +1,6 @@
 {% extends 'about.html' %}
 {% load static %}
+{% load humanize %}
 {% block content %}
 
 
@@ -176,8 +177,8 @@
                                             </div>
                                             <div class="cart-summary-box-text-two">
                                                 <h4>{{ item.title }}</h4>
-                                                <h6><span>{{item.price}} x </span> {{item.qty}}</h6>
-                                                <p>{% widthratio item.price 1 item.qty %}f</p>
+                                                <h6><span>{{item.price|intcomma}} x </span> {{item.qty}}</h6>
+                                                <p>{% widthratio item.price 1 item.qty % |intcomma}f</p>
                                             </div>
                                         </div>
                                     </a>
@@ -231,7 +232,7 @@
                                     </div>
 
                                     <div class="shopping-cart-list-btn">
-                                        <a class="main-btn-six" id="pay_button">
+                                        <button class="main-btn-six" id="pay_button">
                                             Payez
 
                                             <span>
@@ -241,7 +242,7 @@
                                                         stroke-linecap="round" stroke-linejoin="round" />
                                                 </svg>
                                             </span>
-                                          </a>
+                                        </button>
                                     </div>
                                 </div>
 

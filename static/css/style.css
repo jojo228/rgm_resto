@@ -773,7 +773,7 @@ p {
 }
 
 .header-two .nav-bg {
-  background-color: #006837 !important;
+  background-color: #0c834c !important;
   animation: slideDown 1s ease-out;
   margin-top: -48px !important;
   z-index: 999;
@@ -1610,8 +1610,8 @@ p {
 }
 
 .banner-two {
-  padding: 263px 0 247px 0;
-  background: url(../assets/images/banner/banner-bg-two.png) no-repeat center/cover;
+  padding: 600px 0 180px 0;
+  background: url(../assets/images/banner/banner.png) no-repeat center/cover;
   position: relative;
   z-index: 1;
 }
@@ -4653,7 +4653,7 @@ p {
 }
 
 .process {
-  background-image: url(../assets/images/banner/Process-bg.png);
+  background-image: url(../assets/images/banner/Process-bg.jpeg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -5744,7 +5744,7 @@ p {
 }
 
 .customer {
-  background-color: #000929;
+  background: linear-gradient(90deg, #F3931C -1.58%, #FE724C 100%);
 }
 .customer .customer-head {
   text-align: center;

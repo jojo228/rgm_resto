@@ -1,4 +1,6 @@
 {% load static %}
+{% load price_tag %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -60,32 +62,21 @@
                                         stroke-width="1.5" stroke-linejoin="round" />
                                 </svg>
                             </span>
+                            
                         </div>
 
-                        <!-- <div class="location-btn">
+                        <div class="location-btn">
                             <div class="dropdown">
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                <a class="btn btn-secondary" href="#" role="button"
                                     id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Dropdown link
+                                    Amadahomé, à côté de la pharmacie IRIS
                                 </a>
 
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
+                                
                             </div>
 
-                            <div class="location-btn-icon">
-                                <span>
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M5.83301 8.33203L9.99967 11.6654L14.1663 8.33203" stroke="white"
-                                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </span>
-                            </div>
-                        </div> -->
+                            
+                        </div>
 
                     </div>
                 </div>
@@ -114,7 +105,7 @@
 
 
                             <div class="text">
-                                <a href="tel:+17077970462">+228 22 55 69 48</a>
+                                <a href="tel:+22822556948">+228 22 55 69 48</a>
                             </div>
                         </div>
                         <div class="header-right-inner">
@@ -131,7 +122,7 @@
 
 
                             <div class="text">
-                                <a href="mailto:rgmfood@rewards.com">rgmfood@rewards.com</a>
+                                <a href="mailto:reception@rgmfood.com">reception@rgmfood.com</a>
                             </div>
                         </div>
                     </div>
@@ -159,7 +150,7 @@
 
                             <div class="nav-main">
                                 <div class="logo">
-                                    <a href="{% url 'core:index' %}"> <img src="{% static 'assets/images/icon/favicon_rgm.png' %}" alt="logo" style="width: 20%; height: 20%;"></a>
+                                    <a href="{% url 'core:index' %}"> <img src="{% static 'assets/images/logo/rgm.png' %}" alt="logo" style="width: 150px; height: 60px;"></a>
                                 </div>
 
                                 <div class="menu">
@@ -241,7 +232,6 @@
                                         
                                     </div>
                                 </a>
-
 
 
 
@@ -473,7 +463,7 @@
                 <div class="row">
                     <div class="col-lg-6">
 
-                        <div class="banner-two-taitel">
+                        <!-- <div class="banner-two-taitel">
                             <h1>Bienvenu à <br>   <span>
                                     RGM Food
                                 </span></h1>
@@ -532,7 +522,7 @@
                                 </span>
                                 Sur Place</a>
 
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -715,14 +705,14 @@
                 <div class="row">
                     <div class="col-lg-5 col-md-5">
                         <div class="promotions-img promotions-img-two">
-                            <a href="foods-details.html"> <img src="{% static 'assets/images/thumb/PromoBanner-2.png' %}"
+                            <a href="foods-details.html"> <img src="{% static 'assets/images/thumb/promo3.jpeg' %}"
                                     class="w-100" alt="thumb"></a>
                         </div>
                     </div>
                     <div class="col-lg-7 col-md-7">
                         <div class="promotions-img">
 
-                            <a href="foods-details.html"> <img src="{% static 'assets/images/thumb/PromoBanner-1.png' %}"
+                            <a href="foods-details.html"> <img src="{% static 'assets/images/thumb/promo1.jpeg' %}"
                                     class="w-100" alt="thumb"></a>
 
                         </div>
@@ -812,7 +802,7 @@
                                 <div class="featured-item-text">
                                     <div class="text-item">
                                         <div class="left">
-                                            <h3 class="current-product-price-{{ p.id }}">{{p.price|floatformat:0}}</h3>
+                                            <h3 class="current-product-price-{{ p.id }}">{{p.price|floatformat:0|intcomma}} <span>f</span> </h3>
                                         </div>
                                         <div class="right">
                                             <div class="icon">
@@ -943,7 +933,7 @@
 
                     <div class="col-lg-6 col-md-12">
                         <div class="process-head" data-aos="fade-up">
-                            <h2>Le processus de création de votre expérience culinaire</h2>
+                            <h2>RGM FOOD, Votre Saveur Votre Choix !</h2>
                         </div>
 
                         <div class="process-item-box">
@@ -951,15 +941,27 @@
                                 <div class="process-item-icon">
                                     <div class="icon">
                                         <span>
-                                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M20.7371 23.5034C23.8364 20.3264 26.6663 15.5679 26.6663 11.7606C26.6663 5.44878 21.443 0.332031 14.9997 0.332031C8.55635 0.332031 3.33301 5.44878 3.33301 11.7606C3.33301 15.5679 6.16294 20.3264 9.26228 23.5034C11.3011 25.5932 13.4566 26.9987 14.9997 26.9987C16.5428 26.9987 18.6982 25.5932 20.7371 23.5034ZM14.9997 15.332C16.8406 15.332 18.333 13.8396 18.333 11.9987C18.333 10.1577 16.8406 8.66536 14.9997 8.66536C13.1587 8.66536 11.6663 10.1577 11.6663 11.9987C11.6663 13.8396 13.1587 15.332 14.9997 15.332Z"
-                                                    fill="white" />
-                                                <path opacity="0.4" fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M6.75902 24.4883C2.6873 25.3824 0 26.9199 0 28.6668C0 31.4282 6.71573 33.6668 15 33.6668C23.2843 33.6668 30 31.4282 30 28.6668C30 26.9199 27.3127 25.3824 23.241 24.4883C23.0051 24.7502 22.7668 25.0045 22.5269 25.2504C21.4064 26.399 20.2024 27.4143 19.0016 28.1599C17.8569 28.8707 16.455 29.5 15 29.5C13.545 29.5 12.1431 28.8707 10.9984 28.1599C9.7976 27.4143 8.59362 26.399 7.47312 25.2504C7.23321 25.0045 6.99487 24.7502 6.75902 24.4883Z"
-                                                    fill="white" />
-                                            </svg>
+                                            <svg width="30" height="34" viewBox="0 -8 72 72" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" stroke="#ffffff">
+
+                                                <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                                                
+                                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                                                
+                                                <g id="SVGRepo_iconCarrier">
+                                                
+                                                <defs>
+                                                
+                                                <style>.cls-1{fill:#ffffff;}</style>
+                                                
+                                                </defs>
+                                                
+                                                <title>handshake</title>
+                                                
+                                                <path class="cls-1" d="M64,12.78v17s-3.63.71-4.38.81-3.08.85-4.78-.78C52.22,27.25,42.93,18,42.93,18a3.54,3.54,0,0,0-4.18-.21c-2.36,1.24-5.87,3.07-7.33,3.78a3.37,3.37,0,0,1-5.06-2.64,3.44,3.44,0,0,1,2.1-3c3.33-2,10.36-6,13.29-7.52,1.78-1,3.06-1,5.51,1C50.27,12,53,14.27,53,14.27a2.75,2.75,0,0,0,2.26.43C58.63,14,64,12.78,64,12.78ZM27,41.5a3,3,0,0,0-3.55-4.09,3.07,3.07,0,0,0-.64-3,3.13,3.13,0,0,0-3-.75,3.07,3.07,0,0,0-.65-3,3.38,3.38,0,0,0-4.72.13c-1.38,1.32-2.27,3.72-1,5.14s2.64.55,3.72.3c-.3,1.07-1.2,2.07-.09,3.47s2.64.55,3.72.3c-.3,1.07-1.16,2.16-.1,3.46s2.84.61,4,.25c-.45,1.15-1.41,2.39-.18,3.79s4.08.75,5.47-.58a3.32,3.32,0,0,0,.3-4.68A3.18,3.18,0,0,0,27,41.5Zm25.35-8.82L41.62,22a3.53,3.53,0,0,0-3.77-.68c-1.5.66-3.43,1.56-4.89,2.24a8.15,8.15,0,0,1-3.29,1.1,5.59,5.59,0,0,1-3-10.34C29,12.73,34.09,10,34.09,10a6.46,6.46,0,0,0-5-2C25.67,8,18.51,12.7,18.51,12.7a5.61,5.61,0,0,1-4.93.13L8,10.89v19.4s1.59.46,3,1a6.33,6.33,0,0,1,1.56-2.47,6.17,6.17,0,0,1,8.48-.06,5.4,5.4,0,0,1,1.34,2.37,5.49,5.49,0,0,1,2.29,1.4A5.4,5.4,0,0,1,26,34.94a5.47,5.47,0,0,1,3.71,4,5.38,5.38,0,0,1,2.39,1.43,5.65,5.65,0,0,1,1.48,4.89,0,0,0,0,1,0,0s.8.9,1.29,1.39a2.46,2.46,0,0,0,3.48-3.48s2,2.48,4.28,1c2-1.4,1.69-3.06.74-4a3.19,3.19,0,0,0,4.77.13,2.45,2.45,0,0,0,.13-3.3s1.33,1.81,4,.12c1.89-1.6,1-3.43,0-4.39Z"/>
+                                                
+                                                </g>
+                                                
+                                                </svg>
                                         </span>
                                     </div>
 
@@ -967,12 +969,12 @@
                                 </div>
 
                                 <div class="text">
-                                    <h3>Définissez votre emplacement</h3>
-                                    <p>Qualité parfaitement adaptée aux besoins des clients</p>
+                                    <h3>Fidélité Récompensé</h3>
+                                    <p>Rejoignez notre Famille Gourmande et Profitez d'Avantages Exclusifs</p>
                                 </div>
 
                                 <div class="process-item-right-img">
-                                    <img src="./assets/images/icon/1.png" alt="img">
+                                    <img src="{% static 'assets/images/icon/1.png' %}" alt="img">
                                 </div>
                             </div>
                             <div class="process-item" data-aos="fade-up" data-aos-delay="200">
@@ -996,11 +998,11 @@
 
                                 <div class="text">
                                     <h3>Faites Votre Choix</h3>
-                                    <p>Qualité parfaitement adaptée aux besoins des clients</p>
+                                    <p>Découvrez une large gamme de plats en passant par le fast food, les snacks, pâtisseries, et bien plus.</p>
                                 </div>
 
                                 <div class="process-item-right-img">
-                                    <img src="./assets/images/icon/2.png" alt="img">
+                                    <img src="{% static 'assets/images/icon/2.png' %}" alt="img">
                                 </div>
                             </div>
                             <div class="process-item" data-aos="fade-up" data-aos-delay="300">
@@ -1030,11 +1032,11 @@
 
                                 <div class="text">
                                     <h3>Payer En Espèces Ou En Ligne</h3>
-                                    <p>Offrant une ambiance haut de gamme et élégante</p>
+                                    <p>Cash, Moov Money (Flooz), Tmoney, Carte Bancaire (Visa, Master et bien d'autres).</p>
                                 </div>
 
                                 <div class="process-item-right-img">
-                                    <img src="./assets/images/icon/3.png" alt="img">
+                                    <img src="{% static 'assets/images/icon/3.png' %}" alt="img">
                                 </div>
                             </div>
                             <div class="process-item" data-aos="fade-up" data-aos-delay="400">
@@ -1070,11 +1072,11 @@
 
                                 <div class="text">
                                     <h3>Livraison ou Sur Place</h3>
-                                    <p>Permettre aux clients de réserver facilement des tables</p>
+                                    <p>Faites-vous livrer ou récupérez votre commande chez nous à Amadahome, en face de  la Pharmacie Iris</p>
                                 </div>
 
                                 <div class="process-item-right-img">
-                                    <img src="./assets/images/icon/4.png" alt="img">
+                                    <img src="{% static 'assets/images/icon/4.png' %}" alt="img">
                                 </div>
                             </div>
 
@@ -1721,31 +1723,28 @@
                         <div class="customer-item">
 
                             <div class="customer-img">
-                                <img src="./assets/images/icon/customer-icon.png" alt="icon">
+                                <img src="{% static 'assets/images/icon/customer-icon.png' %}" alt="icon">
                             </div>
                             <div class="customer-item-text">
-                                <p>"Un véritable paradis pour les gourmands ! Les saveurs de
-RGM Food sont une symphonie de délices. Chaque bouchée raconte une histoire de passion et de savoir-faire. Un
-incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
+                                <p>Un service impeccable ! La commande était rapide et la nourriture délicieuse. Je recommande RGM Food à 100% !</p>
                             </div>
                         </div>
 
                         <div class="customer-inner">
-                            <div class="customer-inner-img">
-                                <img src="./assets/images/small/customer-1.png" alt="img">
-                            </div>
+                            <!-- <div class="customer-inner-img">
+                                <img src="{% static 'assets/images/small/customer-1.png' %}" alt="img">
+                            </div> -->
 
                             <div class="customer-inner-text">
                                 <div class="icon">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
                                 </div>
 
-                                <h3>Jonson Roy</h3>
-                                <h5>Job Holder</h5>
+                                <h3>Emmanuel K.</h3>
                             </div>
                         </div>
                     </div>
@@ -1753,31 +1752,25 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                         <div class="customer-item ">
 
                             <div class="customer-img">
-                                <img src="./assets/images/icon/customer-icon.png" alt="icon">
+                                <img src="{% static 'assets/images/icon/customer-icon.png' %}" alt="icon">
                             </div>
                             <div class="customer-item-text">
-                                <p>"Un véritable paradis pour les gourmands ! Les saveurs de
-RGM Food sont une symphonie de délices. Chaque bouchée raconte une histoire de passion et de savoir-faire. Un
-incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
+                                <p>Des plats savoureux, un personnel accueillant et un service rapide. RGM Food est désormais mon restaurant préféré.</p>
                             </div>
                         </div>
 
                         <div class="customer-inner">
-                            <div class="customer-inner-img">
-                                <img src="./assets/images/small/customer-2.png" alt="img">
-                            </div>
-
+                    
                             <div class="customer-inner-text">
                                 <div class="icon">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
                                 </div>
 
-                                <h3>David Ethic</h3>
-                                <h5>Dog Trainer</h5>
+                                <h3>Sarah A.</h3>
                             </div>
                         </div>
                     </div>
@@ -1785,31 +1778,26 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                         <div class="customer-item">
 
                             <div class="customer-img">
-                                <img src="./assets/images/icon/customer-icon.png" alt="icon">
+                                <img src="{% static 'assets/images/icon/customer-icon.png' %}" alt="icon">
                             </div>
                             <div class="customer-item-text">
-                                <p>"Un véritable paradis pour les gourmands ! Les saveurs de
-RGM Food sont une symphonie de délices. Chaque bouchée raconte une histoire de passion et de savoir-faire. Un
-incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
+                                <p>La diversité des menus est incroyable ! Il y a toujours quelque chose de nouveau à essayer, et c'est toujours excellent.</p>
                             </div>
                         </div>
 
                         <div class="customer-inner">
-                            <div class="customer-inner-img">
-                                <img src="./assets/images/small/customer-3.png" alt="img">
-                            </div>
+                        
 
                             <div class="customer-inner-text">
                                 <div class="icon">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
                                 </div>
 
-                                <h3>Robert Fox</h3>
-                                <h5>Bike Trainer</h5>
+                                <h3>Komi D.</h3>
                             </div>
                         </div>
                     </div>
@@ -1817,31 +1805,26 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                         <div class="customer-item">
 
                             <div class="customer-img">
-                                <img src="./assets/images/icon/customer-icon.png" alt="icon">
+                                <img src="{% static 'assets/images/icon/customer-icon.png' %}" alt="icon">
                             </div>
                             <div class="customer-item-text">
-                                <p>"Un véritable paradis pour les gourmands ! Les saveurs de
-RGM Food sont une symphonie de délices. Chaque bouchée raconte une histoire de passion et de savoir-faire. Un
-incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
+                                <p>J'ai adoré la facilité de commande en ligne et la rapidité de la livraison. C'est vraiment pratique !</p>
                             </div>
                         </div>
 
                         <div class="customer-inner">
-                            <div class="customer-inner-img">
-                                <img src="./assets/images/small/customer-1.png" alt="img">
-                            </div>
+                            
 
                             <div class="customer-inner-text">
                                 <div class="icon">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
                                 </div>
 
-                                <h3>Jonson Roy</h3>
-                                <h5>Job Holder</h5>
+                                <h3>Awa T.</h3>
                             </div>
                         </div>
                     </div>
@@ -1849,31 +1832,26 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                         <div class="customer-item ">
 
                             <div class="customer-img">
-                                <img src="./assets/images/icon/customer-icon.png" alt="icon">
+                                <img src="{% static 'assets/images/icon/customer-icon.png' %}" alt="icon">
                             </div>
                             <div class="customer-item-text">
-                                <p>"Un véritable paradis pour les gourmands ! Les saveurs de
-RGM Food sont une symphonie de délices. Chaque bouchée raconte une histoire de passion et de savoir-faire. Un
-incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
+                                <p>Leur cuisine est tout simplement divine, que ce soit pour emporter ou sur place, c'est un régal à chaque fois</p>
                             </div>
                         </div>
 
                         <div class="customer-inner">
-                            <div class="customer-inner-img">
-                                <img src="./assets/images/small/customer-2.png" alt="img">
-                            </div>
+                           
 
                             <div class="customer-inner-text">
                                 <div class="icon">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
                                 </div>
 
-                                <h3>David Ethic</h3>
-                                <h5>Dog Trainer</h5>
+                                <h3>David M.</h3>
                             </div>
                         </div>
                     </div>
@@ -1881,31 +1859,53 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                         <div class="customer-item">
 
                             <div class="customer-img">
-                                <img src="./assets/images/icon/customer-icon.png" alt="icon">
+                                <img src="{% static 'assets/images/icon/customer-icon.png' %}" alt="icon">
                             </div>
                             <div class="customer-item-text">
-                                <p>"Un véritable paradis pour les gourmands ! Les saveurs de
-RGM Food sont une symphonie de délices. Chaque bouchée raconte une histoire de passion et de savoir-faire. Un
-incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
+                                <p>La qualité des ingrédients est top et on le sent dans chaque bouchée. RGM Food, garantie d'une belle expérience culinaire.</p>
                             </div>
                         </div>
 
                         <div class="customer-inner">
-                            <div class="customer-inner-img">
-                                <img src="./assets/images/small/customer-3.png" alt="img">
-                            </div>
+                            
 
                             <div class="customer-inner-text">
                                 <div class="icon">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
-                                    <img src="./assets/images/icon/star.svg" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
                                 </div>
 
-                                <h3>Robert Fox</h3>
-                                <h5>Bike Trainer</h5>
+                                <h3>Juli P.</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 ">
+                        <div class="customer-item">
+
+                            <div class="customer-img">
+                                <img src="{% static 'assets/images/icon/customer-icon.png' %}" alt="icon">
+                            </div>
+                            <div class="customer-item-text">
+                                <p>Les portions sont généreuses, les prix abordables, et le goût est inégalable. Je suis un client fidèle</p>
+                            </div>
+                        </div>
+
+                        <div class="customer-inner">
+                            
+
+                            <div class="customer-inner-text">
+                                <div class="icon">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                    <img src="{% static 'assets/images/icon/star.svg' %}" alt="img">
+                                </div>
+
+                                <h3>Togbé F.</h3>
                             </div>
                         </div>
                     </div>
@@ -1925,7 +1925,7 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                 <div class="row align-items-center">
                     <div class="col-lg-6 col-md-12" data-aos="fade-left">
                         <div class="faq-head">
-                            <h2>RGM Food FAQ: Les Réponses À Vos Questions Culinaires</h2>
+                            <h2>Réponses À Vos Questions</h2>
                         </div>
 
 
@@ -1936,14 +1936,14 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#collapseOne" aria-expanded="true"
                                             aria-controls="collapseOne">
-                                            What type of cuisine does your restaurant offer?
+                                            Quels types de plats proposez-vous chez RGM Food ?
                                         </button>
                                     </h2>
                                     <div id="collapseOne" class="accordion-collapse collapse show"
                                         aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
-                                            We offer [insert type of cuisine, e.g., Italian, Asian fusion,
-                                            Mediterranean] cuisine that combines traditional flavors with modern twists.
+                                            Nous offrons une large gamme de plats, allant de la cuisine locale aux spécialités internationales, 
+                                            ainsi que des snacks, fast food, pâtisseries et options de boissons.
                                         </div>
                                     </div>
                                 </div>
@@ -1952,14 +1952,14 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                                         <button class="accordion-button collapsed" type="button"
                                             data-bs-toggle="collapse" data-bs-target="#collapseTwo"
                                             aria-expanded="false" aria-controls="collapseTwo">
-                                            Can I make a reservation online?
+                                            Comment puis-je passer commande en ligne ?
                                         </button>
                                     </h2>
                                     <div id="collapseTwo" class="accordion-collapse collapse"
                                         aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
-                                            We offer [insert type of cuisine, e.g., Italian, Asian fusion,
-                                            Mediterranean] cuisine that combines traditional flavors with modern twists.
+                                            Vous pouvez passer commande via notre plateforme en ligne, sur WhatsApp ou directement en nous contactant. 
+                                            Il suffit de choisir vos plats préférés et de sélectionner vos options de livraison ou de retrait.
                                         </div>
                                     </div>
                                 </div>
@@ -1968,14 +1968,14 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                                         <button class="accordion-button collapsed" type="button"
                                             data-bs-toggle="collapse" data-bs-target="#collapseThree"
                                             aria-expanded="false" aria-controls="collapseThree">
-                                            Is there a dress code for dining at your restaurant?
+                                            Offrez-vous des options de livraison à domicile ?
                                         </button>
                                     </h2>
                                     <div id="collapseThree" class="accordion-collapse collapse"
                                         aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
-                                            We offer [insert type of cuisine, e.g., Italian, Asian fusion,
-                                            Mediterranean] cuisine that combines traditional flavors with modern twists.
+                                            Oui, nous proposons la livraison à domicile pour vous permettre 
+                                            de profiter de nos plats dans le confort de votre maison.
                                         </div>
                                     </div>
                                 </div>
@@ -1986,14 +1986,43 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                                         <button class="accordion-button collapsed" type="button"
                                             data-bs-toggle="collapse" data-bs-target="#collapsefour"
                                             aria-expanded="false" aria-controls="collapsefour">
-                                            Is there a dress code for dining at your restaurant?
+                                            Quels sont les moyens de paiement acceptés chez RGM Food ?
                                         </button>
                                     </h2>
                                     <div id="collapsefour" class="accordion-collapse collapse"
                                         aria-labelledby="headingfour" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
-                                            We offer [insert type of cuisine, e.g., Italian, Asian fusion,
-                                            Mediterranean] cuisine that combines traditional flavors with modern twists.
+                                            Nous acceptons plusieurs moyens de paiement : cash, Moov Money (Flooz), TMoney, et cartes bancaires (Visa, MasterCard, et bien d'autres).
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingfive">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapsefive"
+                                            aria-expanded="false" aria-controls="collapsefive">
+                                            Puis-je organiser un événement ou commander un service de traiteur avec RGM Food ?
+                                        </button>
+                                    </h2>
+                                    <div id="collapsefive" class="accordion-collapse collapse"
+                                        aria-labelledby="headingfive" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            Absolument ! Nous offrons des services de traiteur et d'organisation d'événements. Contactez-nous pour discuter de vos besoins et nous personnaliserons un menu pour votre occasion.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingsix">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapsesix"
+                                            aria-expanded="false" aria-controls="collapsesix">
+                                            Avez-vous des promotions ou des offres spéciales pour les clients fidèles ?
+                                        </button>
+                                    </h2>
+                                    <div id="collapsesix" class="accordion-collapse collapse"
+                                        aria-labelledby="headingsix" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            Oui, pour profiter des offres spéciales de RGM Food, vous devez créer un compte sur notre plateforme. Vous serez agréablement surpris !
                                         </div>
                                     </div>
                                 </div>
@@ -2010,7 +2039,7 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                         <div class="row">
                             <div class="col-lg-8">
                                 <div class="faq-img  ">
-                                    <img src="{% static 'assets/images/thumb/faq-1.png' %}" class="w-100" alt="thumb">
+                                    <img src="{% static 'assets/images/thumb/faq-1.jpg' %}" class="w-100" alt="thumb">
                                 </div>
                             </div>
                             <div class="col-lg-4">
@@ -2071,7 +2100,7 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                                 <div class="faq-img  ">
 
                                     <div class="img-animetion">
-                                        <img src="{% static 'assets/images/thumb/faq-4.png' %}" alt="thumb">
+                                        <img src="{% static 'assets/images/thumb/faq-4.jpg' %}" alt="thumb">
                                     </div>
 
                                 </div>
@@ -2150,7 +2179,7 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
                 <div class="col-lg-4 col-md-12" data-aos="fade-right">
                     <div class="footer-logo">
                         <div class="logo">
-                            <img src="{% static 'assets/images/logo/rgm.png' %}" alt="logo" style="width: 100%; height: 120px;">
+                            <img src="{% static 'assets/images/logo/rgm.png' %}" alt="logo" style="width: 200px; height: 80px;">
                         </div>
                     </div>
 
@@ -2283,10 +2312,6 @@ incontournable pour tous ceux qui recherchent quelque chose d'incomparable."</p>
             </div>
         </div>
     </div>
-
-
-
-
 
 
     <script src="{% static 'assets/js/jquery-3.6.3.min.js' %}"></script>

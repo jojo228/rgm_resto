@@ -25,6 +25,7 @@ if not DEBUG:
     DEBUG_PROPAGATE_EXCEPTIONS = True
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
+# ALLOWED_HOSTS = ["127.0.0.1", "192.168.43.53", "192.168.1.81", "localhost"]
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 

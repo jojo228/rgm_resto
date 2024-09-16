@@ -35,8 +35,11 @@ from django.core import serializers
 
 
 def index(request):
-    # bannanas = Product.objects.all().order_by("-id")
     products = Product.objects.all().order_by("-id")   
+    # fast_food = Product.objects.filter(category="Fast Food").count()
+    # patisserie = Product.objects.filter(category="Fast Food").count()
+    # fast_food = Product.objects.filter(category="Fast Food").count()
+    # fast_food = Product.objects.filter(category="Fast Food").count()
 
     return render(request, "index.html", locals())
 
@@ -228,7 +231,8 @@ def cart_view(request):
     cart_total_amount = 0
     if "cart_data_obj" in request.session:
         for p_id, item in request.session["cart_data_obj"].items():
-            cart_total_amount += int(item["qty"]) * float(item["price"])
+            cleaned_price = item["price"].replace(',', '').replace('f', '').strip()
+            cart_total_amount += int(item["qty"]) * float(cleaned_price)
         return render(
             request,
             "shopping-cart.html",
@@ -346,12 +350,12 @@ class CheckoutView(View):
             if "cart_data_obj" in self.request.session:
                 # Getting total amount for Paypal Amount
                 for p_id, item in self.request.session["cart_data_obj"].items():
-                    total_amount += int(item["qty"]) * float(item["price"])
+                    cleaned_price = item["price"].replace(',', '').replace('f', '').strip()
+                    total_amount += int(item["qty"]) * float(cleaned_price)
             
 
                 # Calculate cart total amount and total items
                 cart_data = self.request.session.get("cart_data_obj", {})
-                cart_total_amount = sum(int(item["qty"]) * float(item["price"]) for item in cart_data.values())
                 totalcartitems = len(cart_data)
 
                 order = CartOrder.objects.create(user=self.request.user, ordered=False, price=cart_total_amount)
