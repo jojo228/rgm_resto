@@ -100,6 +100,13 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.sqlite3",
+#             "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+#         }
+#     }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -166,9 +173,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 JAZZMIN_SETTINGS = {
     'site_header': "RGM Food",
-    'site_brand': "Keep It Flueed",
-    'site_logo': "assets/imgs/theme/LOGO-FLUEEDEN-1 copy 2.png",
-    'copyright': "rewardsgm.com",
+    'site_brand': "L'excellence des saveurs",
+    'site_logo': "assets/images/logo/rgm.png",
+    'copyright': "Reward Global Market",
 }
 
 LOGIN_URL = "userauths:sign-in"

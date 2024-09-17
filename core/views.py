@@ -36,10 +36,11 @@ from django.core import serializers
 
 def index(request):
     products = Product.objects.all().order_by("-id")   
-    # fast_food = Product.objects.filter(category="Fast Food").count()
-    # patisserie = Product.objects.filter(category="Fast Food").count()
-    # fast_food = Product.objects.filter(category="Fast Food").count()
-    # fast_food = Product.objects.filter(category="Fast Food").count()
+
+    patisserie = Product.objects.filter(category=1).count()
+    cuisine = Product.objects.filter(category=2).count()
+    fast_food = Product.objects.filter(category=3).count()
+    autre = Product.objects.filter(category=4).count()
 
     return render(request, "index.html", locals())
 
