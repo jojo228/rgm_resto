@@ -50,10 +50,11 @@ urlpatterns = [
     # Remvoing from wishlist
     path("remove-from-wishlist/", remove_wishlist, name="remove-from-wishlist"),
     path("contact/", contact, name="contact"),
+    path("event/", event, name="event"),
     path("ajax-contact-form/", ajax_contact_form, name="ajax-contact-form"),
     path("about_us/", about_us, name="about_us"),
     path("blog/", blog, name="blog"),
-    path("purchase_guide/", purchase_guide, name="purchase_guide"),
+    path("trust_safety/", trust_safety, name="trust_safety"),
     path("privacy_policy/", privacy_policy, name="privacy_policy"),
     path("terms_of_service/", terms_of_service, name="terms_of_service"),
 ]

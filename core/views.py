@@ -905,6 +905,10 @@ def contact(request):
     return render(request, "contact.html")
 
 
+def event(request):
+    return render(request, "event.html")
+
+
 def ajax_contact_form(request):
     full_name = request.GET["full_name"]
     email = request.GET["email"]
@@ -933,13 +937,13 @@ def about_us(request):
     return render(request, "about.html")
 
 
-def purchase_guide(request):
-    return render(request, "purchase_guide.html")
+def trust_safety(request):
+    return render(request, "trust-safety.html")
 
 
 def privacy_policy(request):
-    return render(request, "privacy_policy.html")
+    return render(request, "privacy-policy.html")
 
 
 def terms_of_service(request):
-    return render(request, "terms_of_service.html")
+    return render(request, "terms-service.html")

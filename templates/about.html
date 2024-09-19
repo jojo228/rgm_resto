@@ -55,6 +55,20 @@
                             </span>
                         </div>
 
+                        <div class="location-btn">
+                            <div class="dropdown">
+                                <a class="btn btn-secondary" href="#" role="button"
+                                    id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Amadahomé, à côté de la pharmacie IRIS
+                                </a>
+
+                                
+                            </div>
+
+                            
+                        </div>
+                        
+
                        
 
                     </div>
@@ -62,8 +76,8 @@
 
 
                 <div class="header-left-center">
-                    <p>It's the last day to save. The skills for now — <span>
-                            <a href="#">now on sale.</a>
+                    <p>Dernier jour pour faire des économies. Bénéficiez ici — <span>
+                            <a href="#">En vente.</a>
                         </span></p>
                 </div>
 
@@ -101,7 +115,7 @@
 
 
                             <div class="text">
-                                <a href="mailto:rgmfood@rewards.com">rgmfood@rewards.com</a>
+                                <a href="mailto:reception@rgmfood.com">reception@rgmfood.com</a>
                             </div>
                         </div>
                     </div>
@@ -398,7 +412,7 @@
                 <div class="p-left">
                     <div class="logo">
                         <a href="index.html">
-                            <img src="./assets/images/logo/logo-header.svg" alt="logo">
+                            <img src="{% static 'assets/images/logo/logo-header.svg" alt="logo">
                         </a>
                     </div>
                 </div>
@@ -416,16 +430,16 @@
             <button id="nav-cls-btn"><i class="fa-solid fa-xmark"></i></button>
             <div class="logo">
                 <a href="">
-                    <img src="./assets/images/logo/logo-header.svg" alt="logo">
+                    <img src="{% static 'assets/images/logo/logo-header.svg" alt="logo">
                 </a>
             </div>
             <ul class="nav-links">
                 <li class="dropdown">
-                    <a href="#">Home <span><i class="fa-solid fa-angle-down"></i></span> </a>
+                    <a href="#">Accueil <span><i class="fa-solid fa-angle-down"></i></span> </a>
 
                     <ul class="d-menu">
-                        <li><a href="index.html">Home-01 </a> </li>
-                        <li><a href="index-2.html">Home-02</a></li>
+                        <li><a href="index.html">Accueil-01 </a> </li>
+                        <li><a href="index-2.html">Accueil-02</a></li>
                     </ul>
 
 
@@ -463,12 +477,12 @@
                 <div class="row  ">
                     <div class="col-lg-12">
                         <div class="inner-banner-head">
-                            <h1>About us</h1>
+                            <h1>A Propos</h1>
                         </div>
 
                         <div class="inner-banner-item">
                             <div class="left">
-                                <a href="index.html">Home</a>
+                                <a href="{% url 'core:index' %}">Accueil</a>
                             </div>
                             <div class="icon">
                                 <span>
@@ -480,7 +494,7 @@
                                 </span>
                             </div>
                             <div class="left">
-                                <span>About us</span>
+                                <span>A Propos</span>
                             </div>
                         </div>
                     </div>
@@ -498,17 +512,17 @@
                 <div class="row align-items-center ">
                     <div class="col-lg-6 ">
                         <div class="about-us-img">
-                            <img src="./assets/images/thumb/about-thumb.png" class="w-100" alt="thumb">
+                            <img src="{% static 'assets/images/thumb/about-thumb.png' %}" class="w-100" alt="thumb">
 
 
 
                             <div class="about-us-img-btn-img">
 
                                 <div class="about-us-img-btn-img-main">
-                                    <img src="./assets/images/small/Button.png" alt="img">
+                                    <img src="{% static 'assets/images/small/Button.png' %}" alt="img">
                                     <div class="about-us-img-btn-img-overlay">
-                                        <h2>50</h2>
-                                        <span>Years</span>
+                                        <h2>4</h2>
+                                        <span>Ans</span>
                                     </div>
                                 </div>
 
@@ -523,42 +537,41 @@
 
                     <div class="col-lg-6 about-pl-45px" data-aos="fade-left">
                         <div class="about-us-head">
-                            <h2>Our Story of food Culinary Excellence at RGM Food</h2>
+                            <h2>Notre histoire d'excellence culinaire alimentaire chez RGM Food</h2>
 
-                            <h5>There are many variations of passages of Lorem Ipsum available, but the to a
-                                majority have suffered alteration in some form, by injected humour, or find
-                                randomised words which don't look even slightly believable. </h5>
+                            <h5>Nous offrons une large gamme de plats, allant de la cuisine locale aux spécialités internationales, 
+                                ainsi que des snacks, fast food, pâtisseries et options de boissons.</h5>
                         </div>
 
                         <div class="about-us-text">
-                            <p>Over 20 years’ experience providing top quality house Booking rant and sell for your
-                                Amazing Dream & Make you Happy</p>
+                            <p>Plus de 20 ans d'expérience en offrant une diatribe de réservation de maison de qualité supérieure et vendez pour votre
+Rêve incroyable et vous rendre heureux</p>
                         </div>
 
                         <div class="row about-mt-48px">
                             <div class="col-lg-6 col-md-6">
                                 <div class="about-us-item">
                                     <div class="icon">
-                                        <img src="./assets/images/icon/about-icon-1.png" alt="icon">
+                                        <img src="{% static 'assets/images/icon/about-icon-1.png' %}" alt="icon">
                                     </div>
 
                                     <div class="text">
-                                        <h3>90k+ Customers</h3>
+                                        <h3>90k+ Clients</h3>
 
-                                        <p>Believe in our service & Care</p>
+                                        <p>Croyez en notre service et nos soins</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6">
                                 <div class="about-us-item about-us-item-resmt ">
                                     <div class="icon">
-                                        <img src="./assets/images/icon/about-icon-2.png" alt="icon">
+                                        <img src="{% static 'assets/images/icon/about-icon-2.png' %}" alt="icon">
                                     </div>
 
                                     <div class="text">
-                                        <h3>100+ Branch</h3>
+                                        <h3>100+ Branches</h3>
 
-                                        <p>Food ready for occupancy</p>
+                                        <p>Nourriture prête pour l'occupation</p>
                                     </div>
                                 </div>
                             </div>
@@ -708,7 +721,7 @@
                             <div class="col-lg-4">
                                 <div class="faq-img">
                                     <div class="faq-img-two">
-                                        <img src="{% static 'assets/images/thumb/faq-2.png' %}" alt="thumb">
+                                        <img src="{% static 'assets/images/thumb/faq-2.png' %}' %}" alt="thumb">
                                         <div class="faq-img-overlay">
                                             <div class="faq-img-overlay-text">
                                                 <h2>
@@ -735,7 +748,7 @@
                             <div class="col-lg-4">
                                 <div class="faq-img img-mt">
                                     <div class="faq-img-two">
-                                        <img src="{% static 'assets/images/thumb/faq-3.png' %}" alt="thumb">
+                                        <img src="{% static 'assets/images/thumb/faq-3.png' %}' %}" alt="thumb">
                                         <div class="faq-img-overlay faq-img-overlay-two ">
                                             <div class="faq-img-overlay-text">
                                                 <h2>
@@ -804,10 +817,10 @@
 
                         <div class="restaurant-taitel-btn">
                             <a href="#"> <span>
-                                    <img src="./assets/images/icon/Google_Play.png" alt="icon">
+                                    <img src="{% static 'assets/images/icon/Google_Play.png' %}" alt="icon">
                                 </span> Google Play</a>
                             <a href="#" class=" restaurant-taitel-btn-two"> <span>
-                                    <img src="./assets/images/icon/apple.png" alt="icon">
+                                    <img src="{% static 'assets/images/icon/apple.png' %}" alt="icon">
                                 </span> Google Play</a>
                         </div>
                     </div>
@@ -816,7 +829,7 @@
                     <div class="col-lg-6" data-aos="fade-left">
                         <div class="restaurant-img-main">
                             <div class="restaurant-img">
-                                <img src="./assets/images/thumb/restaurant.png" alt="img">
+                                <img src="{% static 'assets/images/thumb/restaurant.png' %}" alt="img">
                             </div>
                         </div>
                     </div>
@@ -901,7 +914,7 @@
                                 <div class="quick-line-menu">
                                     <ul>
                                         <li>
-                                            <a href="{% url 'core:purchase_guide' %}">Confiance et sécurité</a>
+                                            <a href="{% url 'core:trust_safety' %}">Confiance et sécurité</a>
                                         </li>
                                         <li>
                                             <a href="{% url 'core:terms_of_service' %}">Termes & Conditions</a>
