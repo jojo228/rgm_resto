@@ -176,8 +176,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 JAZZMIN_SETTINGS = {
     'site_header': "RGM Food",
-    # 'site_brand': "L'excellence des saveurs",
-    'site_logo': "assets/images/logo/rgm.png",
+    'site_brand': "RGM Food",
+    'site_logo': "assets/images/icon/favicon_rgm.png",
     'copyright': "Reward Global Market",
 }
 

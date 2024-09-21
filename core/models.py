@@ -215,3 +215,26 @@ class Address(models.Model):
 
     class Meta:
         verbose_name_plural = 'Addresses'
+
+
+
+class Event(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    image = models.ImageField(upload_to='post_images/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+class Contact(models.Model):
+    number = models.CharField(max_length=8)
+
+    def save(self, *args, **kwargs):
+        if not self.number.startswith('228'):
+            self.number = '228' + self.number
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.number

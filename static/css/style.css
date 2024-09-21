@@ -256,11 +256,11 @@ p {
 }
 .header .header-main .header-left-center p {
   font-weight: 400;
-  color: var(--heading-color);
+  color: #fff;
 }
 .header .header-main .header-left-center p span a {
   text-decoration-line: underline;
-  color: var(--heading-color);
+  color: #fff;
 }
 .header .header-main .header-right .header-right-item {
   display: flex;
@@ -1234,7 +1234,7 @@ p {
   transition: all 0.5s linear;
   overflow: hidden;
   z-index: 1;
-  font-size: 20px;
+  font-size: 10px;
   font-style: normal;
   font-weight: 600;
   letter-spacing: -0.1px;
@@ -7078,7 +7078,7 @@ p {
   border-color: var(--primary-color);
 }
 .footer .quick-line-btn .main-btn-four {
-  width: 140px;
+  width: 130px;
   height: 56px;
   font-size: 16px;
   font-weight: 500;

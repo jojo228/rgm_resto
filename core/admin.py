@@ -9,6 +9,8 @@ from core.models import (
     ProductReview,
     wishlist_model,
     Address,
+    Contact,
+    Event
 )
 
 
@@ -78,3 +80,5 @@ admin.site.register(ProductReview, ProductReviewAdmin)
 admin.site.register(wishlist_model, wishlistAdmin)
 admin.site.register(Address, AddressAdmin)
 admin.site.register(Payment)
+admin.site.register(Contact)
+admin.site.register(Event)

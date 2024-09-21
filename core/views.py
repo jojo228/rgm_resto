@@ -19,7 +19,7 @@ from core.models import (
     Address,
 )
 from userauths.models import ContactUs, Profile
-from core.forms import CheckoutForm, ProductReviewForm
+from core.forms import CheckoutForm, ContactForm, ProductReviewForm
 from django.template.loader import render_to_string
 from django.contrib import messages
 
@@ -233,7 +233,7 @@ def cart_view(request):
     if "cart_data_obj" in request.session:
         for p_id, item in request.session["cart_data_obj"].items():
             cleaned_price = item["price"].replace(',', '').replace('f', '').strip()
-            cart_total_amount += int(item["qty"]) * float(cleaned_price)
+            cart_total_amount += int(item["qty"]) * float(item["price"])
         return render(
             request,
             "shopping-cart.html",
@@ -364,7 +364,8 @@ class CheckoutView(View):
 
                 # Getting total amount for The Cart
                 for p_id, item in self.request.session["cart_data_obj"].items():
-                    cart_total_amount += int(item["qty"]) * float(item["price"])
+                    cleaned_price = item["price"].replace(',', '').replace('f', '').strip()
+                    cart_total_amount += int(item["qty"]) * float(cleaned_price)
 
                     cart_order_products = CartOrderProducts.objects.create(
                         user=self.request.user,
@@ -373,8 +374,8 @@ class CheckoutView(View):
                         item=item["title"],
                         image=item["image"],
                         qty=item["qty"],
-                        price=item["price"],
-                        total=float(item["qty"]) * float(item["price"]),
+                        price=cleaned_price,
+                        total=float(item["qty"]) * float(cleaned_price),
                     )
 
                 context = {
@@ -947,3 +948,19 @@ def privacy_policy(request):
 
 def terms_of_service(request):
     return render(request, "terms-service.html")
+
+
+def register_phone(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('success')  # Redirect to a success page or the same page with a success message
+    else:
+        form = ContactForm()
+    return render(request, 'register_phone.html', {'form': form})
+
+
+
+def success(request):
+    return render(request, 'success.html')

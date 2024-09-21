@@ -22,6 +22,25 @@
     <link rel="stylesheet" href="{% static 'css/slick.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+
+
+    <style>
+        form {
+            display: flex;
+            align-items: center; /* Vertically align input and button */
+            justify-content: space-between; /* Optional: distribute space */
+            }
+
+            form input[type="number"] {
+            flex: 1; /* Take up as much space as possible */
+            margin-right: 10px; /* Add some spacing between input and button */
+            }
+
+            form button {
+            flex-shrink: 0; /* Prevent the button from shrinking */
+            }
+
+    </style>
 </head>
 
 <body>
@@ -771,7 +790,7 @@
                                     <img src="{{ p.image.url }}" alt="img" style="height: 280px; width: 280px; object-fit: cover;">
                                 </div> -->
                                 <div class="featured-item-img">
-                                    <img src="{{ p.image.url }}" class="w-100" alt="featured-thumb" style="height: 280px; width: 280px; object-fit: cover;">
+                                    <img src="{{ p.image.url }}" class="w-100" alt="featured-thumb">
 
                                     <div class="featured-item-img-overlay">
                                         <div class="featured-item-img-over-text">
@@ -787,7 +806,7 @@
                                 <div class="featured-item-text">
                                     <div class="text-item">
                                         <div class="left">
-                                            <h3 class="current-product-price-{{ p.id }}">{{p.price|floatformat:0|intcomma}} </h3>
+                                            <h3 class="current-product-price-{{ p.id }}">{{p.price|floatformat:0}}</h3>
                                         </div>
                                         <div class="right">
                                             <div class="icon">
@@ -2327,8 +2346,8 @@
                             <div class="col-lg-4">
                                 <div class="faq-img">
                                     <div class="faq-img-two">
-                                        <img src="{% static 'assets/images/thumb/faq-2.png' %}" alt="thumb">
-                                        <div class="faq-img-overlay">
+                                        <img src="{% static 'assets/images/thumb/faq-2.jpg' %}" alt="thumb">
+                                        <!-- <div class="faq-img-overlay">
                                             <div class="faq-img-overlay-text">
                                                 <h2>
                                                     <span>
@@ -2346,7 +2365,7 @@
                                                     <br> Event
                                                 </h4>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
 
                                 </div>
@@ -2354,8 +2373,8 @@
                             <div class="col-lg-4">
                                 <div class="faq-img img-mt">
                                     <div class="faq-img-two">
-                                        <img src="{% static 'assets/images/thumb/faq-3.png' %}" alt="thumb">
-                                        <div class="faq-img-overlay faq-img-overlay-two ">
+                                        <img src="{% static 'assets/images/thumb/faq-3.jpg' %}" alt="thumb">
+                                        <!-- <div class="faq-img-overlay faq-img-overlay-two ">
                                             <div class="faq-img-overlay-text">
                                                 <h2>
                                                     <span>
@@ -2373,7 +2392,7 @@
                                                     <br> Event
                                                 </h4>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
 
                                 </div>
@@ -2471,12 +2490,12 @@
 
                     <div class="footer-icon">
                         <div class="icon">
-                            <a href="https://www.facebook.com/" target="_blank"><i
+                            <a href="https://www.facebook.com/people/RGM-FOOD/61559750684648/" target="_blank"><i
                                     class="fa-brands fa-facebook-f"></i></a>
-                            <a href="https://twitter.com/" target="_blank"><i class="fa-brands fa-twitter"></i></a>
-                            <a href="https://www.instagram.com/" target="_blank"><i
-                                    class="fa-brands fa-instagram"></i></a>
-                            <a href="https://www.youtube.com/" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                            <a href="https://www.tiktok.com/@rgmfood" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+                            <a href="https://api.whatsapp.com/send?phone=22871786666&text=Bonjour%20l'%20équipe%20de%20RGM%20Food,%20%20Je%20souhaite%20passer%20une%20commande%20et%20discuter%20des%20options%20disponibles." target="_blank"><i
+                                    class="fa-brands fa-whatsapp"></i></a>
+                            <a href="mailto:reception@rgmfood.com" target="_blank"><i class="fa fa-envelope"></i></a>
                         </div>
                     </div>
                 </div>
@@ -2500,14 +2519,9 @@
                                             <a href="{% url 'core:about_us' %}">A Propos</a>
                                         </li>
                                         <li>
-                                            <a href="{% url 'core:contact' %}">Localisation</a>
+                                            <a href="https://rewardsgm.com">RGM Export</a>
                                         </li>
-                                        <li>
-                                            <a href="{% url 'core:contact' %}">Livraison</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'core:contact' %}">Take A Way</a>
-                                        </li>
+                                        
                                     </ul>
                                 </div>
 
@@ -2545,9 +2559,12 @@
                                     <div class="icon">
                                         <img src="{% static 'assets/images/icon/sms.png' %}" alt="icon">
                                     </div>
-                                    <input type="number" class="form-control" id="exampleFormControlInput6"
-                                        placeholder="Votre contact">
-                                    <a href="#" class="main-btn-four">Souscrire</a>
+                                    <form method="post" action="{% url 'core:register_phone' %}">
+                                        {% csrf_token %}
+                                        {{ form.number.errors }}
+                                        <input type="number" name="number" class="form-control" placeholder="Votre contact">
+                                        <button type="submit" class="main-btn-four">Souscrire</button>
+                                    </form>
                                 </div>
 
 
@@ -2556,16 +2573,16 @@
                                 </div>
 
                                 <div class="quick-line-btn-img">
-                                    <a href="#">
+                                    <a>
                                         <img src="{% static 'assets/images/small/Visa.png' %}" alt="img">
                                     </a>
-                                    <a href="#">
+                                    <a>
                                         <img src="{% static 'assets/images/small/Mastercard.png' %}" alt="img">
                                     </a>
-                                    <a href="#">
+                                    <a>
                                         <img src="{% static 'assets/images/small/Tmoney.png' %}" alt="img">
                                     </a>
-                                    <a href="#">
+                                    <a>
                                         <img src="{% static 'assets/images/small/Flooz.png' %}" alt="img">
                                     </a>
                                 </div>

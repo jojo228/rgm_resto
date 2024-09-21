@@ -1,5 +1,5 @@
 from django import forms
-from core.models import ProductReview
+from core.models import Contact, ProductReview
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 
@@ -57,4 +57,20 @@ class PaymentForm(forms.Form):
     save = forms.BooleanField(required=False)
     use_default = forms.BooleanField(required=False)
 
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ['number']
+        widgets = {
+            'number': forms.TextInput(attrs={'placeholder': 'Enter your Phone Number Here'}),
+        }
+        labels = {
+            'number': 'Phone Number',
+        }
 
+    def clean_number(self):
+        number = self.cleaned_data.get('number')
+        # Ensure that the number only contains digits
+        if not number.isdigit():
+            raise forms.ValidationError("Phone number must only contain digits.")
+        return number
