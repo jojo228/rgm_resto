@@ -3,5 +3,5 @@
 /env
 /media
 .env
-migrations
+/migrations
 core/__pycache__
