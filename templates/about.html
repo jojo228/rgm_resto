@@ -150,6 +150,7 @@
                                     <ul>
                                         <li><a href="{% url 'core:index' %}">Accueil</a></li>
                                         <li><a href="{% url 'core:product-list' %}">Menu</a></li>
+                                        <li><a href="{% url 'core:catalogue_list' %}">Catalogue</a></li>
                                         <li><a href="{% url 'core:about_us' %}">Propos</a></li>
                                         <li><a href="{% url 'core:index' %}">Evènement</a></li>
                                         <li><a href="{% url 'core:contact' %}">Contact</a></li>
@@ -219,10 +220,6 @@
                                                 </svg>
                                                 <span class="cart-length cart-items-count">{{ request.session.cart_data_obj|length }}</span>
                                             </span>
-                                            
-                                            
-    
-    
                                             
                                         </div>
                                     </a>

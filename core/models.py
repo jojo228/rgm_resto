@@ -227,6 +227,25 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+class CatalogueCategory(models.Model):
+    nom = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.nom
+    
+class Catalogue(models.Model):
+    nom = models.CharField(max_length=200)
+    description = models.TextField()
+    prix = models.FloatField()
+    category = models.ForeignKey(CatalogueCategory, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.nom
+    
+
 
 class Contact(models.Model):
     number = models.CharField(max_length=8)

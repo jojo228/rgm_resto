@@ -178,7 +178,7 @@
                                             <div class="cart-summary-box-text-two">
                                                 <h4>{{ item.title }}</h4>
                                                 <h6><span>{{item.price|intcomma}} x </span> {{item.qty}}</h6>
-                                                <p>{% widthratio item.price 1 item.qty % |intcomma}f</p>
+                                                <p>{% widthratio item.price 1 item.qty %}f</p>
                                             </div>
                                         </div>
                                     </a>
@@ -269,24 +269,6 @@
             </div>
         </section>
 
-
-
-
-        <!-- Shopping Cart end  -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
 
     </main>
 

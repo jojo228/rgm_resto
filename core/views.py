@@ -8,6 +8,7 @@ from requests import session
 import requests
 from taggit.models import Tag
 from core.models import (
+    CatalogueCategory,
     Payment,
     Product,
     Category,
@@ -62,6 +63,14 @@ def category_list_view(request):
 
     context = {"categories": categories}
     return render(request, "category-list.html", context)
+
+
+def catalogue_list(request):
+    categories = CatalogueCategory.objects.prefetch_related('catalogue_set').all()
+    context = {
+        'categories': categories
+    }
+    return render(request, "catalogue.html", context)
 
 
 def category_product_list__view(request, cid):

@@ -11,6 +11,7 @@ urlpatterns = [
     path("product/<pid>/", product_detail_view, name="product-detail"),
     # Category
     path("category/", category_list_view, name="category-list"),
+    path('catalogue/', catalogue_list, name='catalogue_list'),
     path("category/<cid>/", category_product_list__view, name="category-product-list"),
     # Tags
     path("products/tag/<slug:tag_slug>/", tag_list, name="tags"),

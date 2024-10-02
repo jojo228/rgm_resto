@@ -1,0 +1,254 @@
+{% extends 'about.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+
+    <main>
+
+        <!-- banner  -->
+
+        <div class="inner-banner">
+            <div class="container">
+                <div class="row  ">
+                    <div class="col-lg-12">
+                        <div class="inner-banner-head">
+                            <h1>Notre Catalogue</h1>
+                        </div>
+
+                        <div class="inner-banner-item">
+                            <div class="left">
+                                <a href="{% url 'core:index' %}">Accueil</a>
+                            </div>
+                            <div class="icon">
+                                <span>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10 7L14 12L10 17" stroke="#E5E6EB" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="left">
+                                <span>Notre Catalogue</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- banner  -->
+
+
+
+        <!-- Shopping Cart  start -->
+
+
+
+
+        <section class="shopping-cart" id="cart-list">
+            <div class="container">
+                <div class="row ">
+                    <div class="col-lg-12">
+                        <div class="tabel-main">
+                            {% for category in categories %}
+                            <h3 style="color: #077541;">{{ category.nom }}</h3>
+                            <table class="table  ">
+                                <thead>
+                                    <tr class="tabel-main-top" style="background-color: #F3931C; color: azure;" >
+                                        
+                                        <th>
+                                            ID
+                                            <span>
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M11.332 2.31567V14.3157" stroke="#718096"
+                                                        stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M6.66602 12.3157L4.66602 14.3157L2.66602 12.3157"
+                                                        stroke="#718096" stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M4.66602 14.3157V2.31567" stroke="#718096"
+                                                        stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M13.332 4.31567L11.332 2.31567L9.33203 4.31567"
+                                                        stroke="#718096" stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            NOM DU PLAT
+                                            <span>
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M11.332 2.31567V14.3157" stroke="#718096"
+                                                        stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M6.66602 12.3157L4.66602 14.3157L2.66602 12.3157"
+                                                        stroke="#718096" stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M4.66602 14.3157V2.31567" stroke="#718096"
+                                                        stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M13.332 4.31567L11.332 2.31567L9.33203 4.31567"
+                                                        stroke="#718096" stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            DETAILS
+                                            <span>
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M11.332 2.31567V14.3157" stroke="#718096"
+                                                        stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M6.66602 12.3157L4.66602 14.3157L2.66602 12.3157"
+                                                        stroke="#718096" stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M4.66602 14.3157V2.31567" stroke="#718096"
+                                                        stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M13.332 4.31567L11.332 2.31567L9.33203 4.31567"
+                                                        stroke="#718096" stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            PRIX
+                                            <span>
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M11.332 2.31567V14.3157" stroke="#718096"
+                                                        stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M6.66602 12.3157L4.66602 14.3157L2.66602 12.3157"
+                                                        stroke="#718096" stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M4.66602 14.3157V2.31567" stroke="#718096"
+                                                        stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M13.332 4.31567L11.332 2.31567L9.33203 4.31567"
+                                                        stroke="#718096" stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                        </th>
+                                        
+                                        <th class="details-control-two">
+                                            Action
+                                            <span>
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M11.332 2.31567V14.3157" stroke="#718096"
+                                                        stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M6.66602 12.3157L4.66602 14.3157L2.66602 12.3157"
+                                                        stroke="#718096" stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M4.66602 14.3157V2.31567" stroke="#718096"
+                                                        stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M13.332 4.31567L11.332 2.31567L9.33203 4.31567"
+                                                        stroke="#718096" stroke-width="1.5" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                        </th>
+
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for product in category.catalogue_set.all %}
+                                    <tr id="cart-item-{{ product_id }}">
+                                        
+                                        <td>
+                                            <div class="tabel-text">
+                                                <h5 style="color: #077541;">{{ product.id }}</h5>
+                                                
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="tabel-text">
+                                                <h5 style="color: #077541;">{{ product.nom }}</h5>
+                                                
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="tabel-text">
+                                                <h6 style="color: #077541;">{{product.description}}</h6>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="tabel-text">
+                                                <h6 style="color: #077541;" class="current-product-price-{{product.id}}">{{product.prix|floatformat:0}}</h6>
+                                            </div>
+                                        </td>
+                                        
+                                        
+                                        <td>
+                                            <div class="tabel-modal-btn">
+                                                <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ product.id }}">
+                                                <input type="hidden" class="product-pid-{{ product.id }}" value="{{ product.pid }}">
+                                                <input type="hidden" class="product-image-{{ product.id }}" value="{{ product.image.url }}">
+                                                <input type="hidden" class="product-id-{{ product.id }}" value="{{ product.id }}">
+                                                <input type="hidden" class="product-title-{{ product.id }}" value="{{ product.nom }}">
+                                                <button id="add-to-cart-btn" data-index="{{ product.id }}" class="view-btn add-to-cart-btn" >
+                                                    Ajouter
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                            <br><br><br>
+                            {% endfor %}
+
+                        </div>
+
+
+            
+
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+        <!-- Shopping Cart end  -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    </main>
+
+
+    
+    
+
+{% endblock %}
