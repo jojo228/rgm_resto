@@ -152,7 +152,7 @@
                                         <td>
                                             <div class="tabel-item">
                                                 <div class="tabel-img">
-                                                    <img src="{{ item.image }}" alt="img">
+                                                    {% if item.image %} <img src="{{ item.image }}" alt="img"> {% else %} <img src="{% static 'assets/images/food.webp' %}"> {% endif %} 
                                                 </div>
 
                                             </div>
