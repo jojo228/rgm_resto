@@ -214,7 +214,7 @@
                                 aria-labelledby="pills-home-tab">
 
                                 <div class="row">
-                                    {% for p in products %}
+                                    {% for p in page_obj %}
                         <div class="col-lg-4 col-md-6 shaf-item res-mb-20px  ">
 
                             <div class="featured-item  " data-aos="fade-up">
@@ -315,39 +315,53 @@
                 </div>
 
                 <div class="row blog-mt-48px">
-                    <div class="col-lg-7 col-md-6 ">
+                    <div class="col-lg-7 col-md-6">
                         <div class="next-prev-btn">
                             <ul>
-                                <li><a href="#"> <span><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M10 8L6 12M6 12L10 16M6 12L18 12" stroke="#F01543"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                                </path>
-                                            </svg></span> </a></li>
-                                <li><a href="#" class="active"> Next Page <span><svg width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M14 16L18 12M18 12L14 8M18 12L6 12" stroke="white"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                                </path>
-                                            </svg></span> </a></li>
+                                {% if page_obj.has_previous %}
+                                    <li>
+                                        <a href="?page={{ page_obj.previous_page_number }}">
+                                            <span>
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M10 8L6 12M6 12L10 16M6 12L18 12" stroke="#F01543" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if page_obj.has_next %}
+                                    <li>
+                                        <a href="?page={{ page_obj.next_page_number }}" class="active"> 
+                                            Next Page 
+                                            <span>
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M14 16L18 12M18 12L14 8M18 12L6 12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                        </a>
+                                    </li>
+                                {% endif %}
                             </ul>
                         </div>
                     </div>
-
+                
                     <div class="col-lg-5 col-md-6">
                         <nav aria-label="...">
                             <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#">Page</a></li>
-                                <li class="page-item active " aria-current="page">
-                                    <span class="page-link">2</span>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Page</a>
+                                </li>
+                                <li class="page-item active" aria-current="page">
+                                    <span class="page-link">{{ page_obj.number }}</span>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="#">of 10</a>
+                                    <a class="page-link" href="#">of {{ page_obj.paginator.num_pages }}</a>
                                 </li>
                             </ul>
                         </nav>
                     </div>
                 </div>
+                
 
             </div>
 

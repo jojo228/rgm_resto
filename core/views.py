@@ -9,6 +9,7 @@ import requests
 from taggit.models import Tag
 from core.models import (
     CatalogueCategory,
+    Event,
     Payment,
     Product,
     Category,
@@ -35,27 +36,52 @@ from django.db.models.functions import ExtractMonth
 from django.core import serializers
 
 
-def index(request):
-    products = Product.objects.all().order_by("-id")   
 
+
+def index(request):
+    # Get all categories that have at least one product, then select a product from each
+    categories_with_products = Category.objects.annotate(product_count=Count('category')).filter(product_count__gt=0)
+
+    # Now retrieve one product from each category
+    products = []
+
+    for category in categories_with_products:
+        # Get one product from each category
+        product = Product.objects.filter(category=category).first()
+        if product:
+            products.append(product)
     patisserie = Product.objects.filter(category=1).count()
     cuisine = Product.objects.filter(category=2).count()
     fast_food = Product.objects.filter(category=3).count()
     autre = Product.objects.filter(category=4).count()
+    events = Event.objects.all().order_by('-created_at')[:6]
 
     return render(request, "index.html", locals())
 
 
+from django.core.paginator import Paginator
+
 def product_list_view(request):
+    # Fetch all products and order them by id
     products = Product.objects.all().order_by("-id")
     tags = Tag.objects.all().order_by("-id")[:6]
 
+    # Set up pagination (6 products per page in this example)
+    paginator = Paginator(products, 9)
+    
+    # Get the current page number from the request
+    page_number = request.GET.get('page')
+
+    # Get the products for the current page
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        "products": products,
+        "page_obj": page_obj,  # Pass the page object to the template
         "tags": tags,
     }
 
     return render(request, "all-food.html", context)
+
 
 
 def category_list_view(request):
@@ -916,7 +942,25 @@ def contact(request):
 
 
 def event(request):
-    return render(request, "event.html")
+    events = Event.objects.all().order_by('-created_at')
+    paginator = Paginator(events, 6)  # Show 6 events per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'events': page_obj,
+    }
+    return render(request, 'event.html', context)
+
+# Detail view for a single event
+def event_detail_view(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    last_events = Event.objects.all().order_by('-created_at')[:6]
+    context = {
+        'event': event,
+        'last_events': last_events,
+    }
+    return render(request, 'event-detail.html', context)
 
 
 def ajax_contact_form(request):
@@ -968,7 +1012,6 @@ def register_phone(request):
     else:
         form = ContactForm()
     return render(request, 'register_phone.html', {'form': form})
-
 
 
 def success(request):

@@ -55,31 +55,12 @@
                             {% for category in categories %}
                             <h3 style="color: #077541; font-weight: bold;">{{ category.nom }}</h3>
                             <br>
-                            <table class="table  ">
+                            <table class="table">
                                 <thead>
                                     <tr class="tabel-main-top" style="background-color: #F3931C; color: azure;" >
                                         
-                                        <th>
-                                            ID
-                                            <span>
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M11.332 2.31567V14.3157" stroke="#718096"
-                                                        stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round"></path>
-                                                    <path d="M6.66602 12.3157L4.66602 14.3157L2.66602 12.3157"
-                                                        stroke="#718096" stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round"></path>
-                                                    <path d="M4.66602 14.3157V2.31567" stroke="#718096"
-                                                        stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round"></path>
-                                                    <path d="M13.332 4.31567L11.332 2.31567L9.33203 4.31567"
-                                                        stroke="#718096" stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round"></path>
-                                                </svg>
-                                            </span>
-                                        </th>
-                                        <th>
+                                        
+                                        <th style="width: 25%;">
                                             NOM DU PLAT
                                             <span>
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -99,7 +80,7 @@
                                                 </svg>
                                             </span>
                                         </th>
-                                        <th>
+                                        <th style="width: 35%;">
                                             DETAILS
                                             <span>
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -119,7 +100,7 @@
                                                 </svg>
                                             </span>
                                         </th>
-                                        <th>
+                                        <th style="width: 20%;">
                                             PRIX
                                             <span>
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -140,7 +121,7 @@
                                             </span>
                                         </th>
                                         
-                                        <th class="details-control-two">
+                                        <th style="width: 25%;">
                                             Action
                                             <span>
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -164,35 +145,30 @@
                                     </tr>
                                 </thead>
 
-                                <tbody>
+                                <tbody >
                                     {% for product in category.catalogue_set.all %}
                                     <tr id="cart-item-{{ product_id }}">
                                         
-                                        <td>
-                                            <div class="tabel-text">
-                                                <h5 style="color: #077541;">{{ product.id }}</h5>
-                                                
-                                            </div>
-                                        </td>
-                                        <td>
+                                        
+                                        <td style="width: 30%;">
                                             <div class="tabel-text">
                                                 <h5 style="color: #077541;">{{ product.nom }}</h5>
                                                 
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="width: 25%;">
                                             <div class="tabel-text">
                                                 <h6 style="color: #077541;">{{product.description}}</h6>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="width: 15%;">
                                             <div class="tabel-text">
                                                 <h6 style="color: #077541;" class="current-product-price-{{product.id}}">{{product.prix|floatformat:0}}</h6>
                                             </div>
                                         </td>
                                         
                                         
-                                        <td>
+                                        <td style="width: 25%;">
                                             <div class="tabel-modal-btn">
                                                 <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ product.id }}">
                                                 <input type="hidden" class="product-pid-{{ product.id }}" value="{{ product.pid }}">

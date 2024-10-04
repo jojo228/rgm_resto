@@ -4,10 +4,16 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.conf import settings
 from userauths.models import Profile, User
+from django.utils import timezone
+from django.core.mail import send_mail  # For email OTP
 
 
 # User = settings.AUTH_USER_MODEL
 
+
+import random
+from django.core.mail import send_mail
+from django.conf import settings
 
 def register_view(request):
     if request.method == "POST":
@@ -15,15 +21,30 @@ def register_view(request):
         if form.is_valid():
             new_user = form.save()
             username = form.cleaned_data.get("username")
+            email = form.cleaned_data.get("email")
             messages.success(
-                request, f"Hey {username}, You account was created successfully."
+                request, f"Hey {username}, your account was created successfully. An OTP has been sent to your email."
             )
-            new_user = authenticate(
-                username=form.cleaned_data["email"],
-                password=form.cleaned_data["password1"],
+            
+            # Generate a random OTP
+            otp = random.randint(100000, 999999)
+
+            # Save OTP to the session (or a temporary model if you prefer)
+            request.session['otp'] = otp
+            request.session['email'] = email
+
+            # Send OTP email
+            send_mail(
+                'Your OTP Code',
+                f'Your OTP code is {otp}.',
+                'togotulawo@gmail.com',
+                [email],
+                fail_silently=False,
             )
-            login(request, new_user)
-            return redirect("userauths:sign-in")
+
+            # Redirect to the OTP verification page
+            return redirect('userauths:verify_otp')
+
     else:
         form = UserRegisterForm()
 
@@ -31,6 +52,33 @@ def register_view(request):
         "form": form,
     }
     return render(request, "sign-up.html", context)
+
+
+
+
+# views.py
+
+def verify_otp(request):
+    if request.method == "POST":
+        otp = request.POST.get("otp")
+        email = request.POST.get("email")  # Get the email from the request
+
+        # Here you should verify the OTP (this can vary depending on your implementation)
+        if verify_otp(otp, email):  # Implement this function to check OTP
+            user = User.objects.get(email=email)  # Fetch the user based on email
+            user.is_active = True  # Activate the user
+            user.save()  # Save the user
+            
+            login(request, user)  # Log the user in
+            messages.success(request, "Your account has been activated successfully!")
+            return redirect("userauths:sign-in")  # Redirect to the login page or any other page
+        else:
+            messages.error(request, "Invalid OTP. Please try again.")
+
+    return render(request, "verify_otp.html")
+
+
+
 
 
 def login_view(request):

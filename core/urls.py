@@ -52,6 +52,7 @@ urlpatterns = [
     path("remove-from-wishlist/", remove_wishlist, name="remove-from-wishlist"),
     path("contact/", contact, name="contact"),
     path("event/", event, name="event"),
+    path('events/<int:pk>/', event_detail_view, name='event_detail'),
     path("ajax-contact-form/", ajax_contact_form, name="ajax-contact-form"),
     path("about_us/", about_us, name="about_us"),
     path("blog/", blog, name="blog"),
@@ -61,4 +62,6 @@ urlpatterns = [
 
     path('register-phone/', register_phone, name='register_phone'),
     path('success/', success, name='success'),
+
+    
 ]
