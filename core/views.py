@@ -21,7 +21,7 @@ from core.models import (
     Address,
 )
 from userauths.models import ContactUs, Profile
-from core.forms import CheckoutForm, ContactForm, ProductReviewForm
+from core.forms import CheckoutForm,  ProductReviewForm
 from django.template.loader import render_to_string
 from django.contrib import messages
 
@@ -1003,15 +1003,15 @@ def terms_of_service(request):
     return render(request, "terms-service.html")
 
 
-def register_phone(request):
-    if request.method == 'POST':
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('success')  # Redirect to a success page or the same page with a success message
-    else:
-        form = ContactForm()
-    return render(request, 'register_phone.html', {'form': form})
+# def register_phone(request):
+#     if request.method == 'POST':
+#         form = ContactForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('success')  # Redirect to a success page or the same page with a success message
+#     else:
+#         form = ContactForm()
+#     return render(request, 'register_phone.html', {'form': form})
 
 
 def success(request):
