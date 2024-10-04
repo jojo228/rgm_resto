@@ -248,13 +248,13 @@ class Catalogue(models.Model):
     
 
 
-# class Contact(models.Model):
-#     number = models.CharField(max_length=8)
+class Contact(models.Model):
+    number = models.CharField(max_length=8)
 
-#     def save(self, *args, **kwargs):
-#         if not self.number.startswith('228'):
-#             self.number = '228' + self.number
-#         super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if not self.number.startswith('228'):
+            self.number = '228' + self.number
+        super().save(*args, **kwargs)
 
-#     def __str__(self):
-#         return self.number
+    def __str__(self):
+        return self.number
