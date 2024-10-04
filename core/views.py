@@ -9,7 +9,7 @@ import requests
 from taggit.models import Tag
 from core.models import (
     CatalogueCategory,
-    # Event,
+    Event,
     Payment,
     Product,
     Category,
@@ -54,7 +54,7 @@ def index(request):
     cuisine = Product.objects.filter(category=2).count()
     fast_food = Product.objects.filter(category=3).count()
     autre = Product.objects.filter(category=4).count()
-    # events = Event.objects.all().order_by('-created_at')[:6]
+    events = Event.objects.all().order_by('-created_at')[:6]
 
     return render(request, "index.html", locals())
 
@@ -941,26 +941,26 @@ def contact(request):
     return render(request, "contact.html")
 
 
-# def event(request):
-#     events = Event.objects.all().order_by('-created_at')
-#     paginator = Paginator(events, 6)  # Show 6 events per page
-#     page_number = request.GET.get('page')
-#     page_obj = paginator.get_page(page_number)
+def event(request):
+    events = Event.objects.all().order_by('-created_at')
+    paginator = Paginator(events, 6)  # Show 6 events per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-#     context = {
-#         'events': page_obj,
-#     }
-#     return render(request, 'event.html', context)
+    context = {
+        'events': page_obj,
+    }
+    return render(request, 'event.html', context)
 
 # Detail view for a single event
-# def event_detail_view(request, pk):
-#     event = get_object_or_404(Event, pk=pk)
-#     last_events = Event.objects.all().order_by('-created_at')[:6]
-#     context = {
-#         'event': event,
-#         'last_events': last_events,
-#     }
-#     return render(request, 'event-detail.html', context)
+def event_detail_view(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    last_events = Event.objects.all().order_by('-created_at')[:6]
+    context = {
+        'event': event,
+        'last_events': last_events,
+    }
+    return render(request, 'event-detail.html', context)
 
 
 def ajax_contact_form(request):
