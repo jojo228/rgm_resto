@@ -892,12 +892,11 @@ Rêve incroyable et vous rendre heureux</p>
                                     <div class="icon">
                                         <img src="{% static 'assets/images/icon/sms.png' %}" alt="icon">
                                     </div>
-                                    <form method="post" action="{% url 'core:register_phone' %}" class="newsletter-form">
+                                    <form method="post" action="{% url 'core:register_phone' %}">
                                         {% csrf_token %}
                                         {{ form.number.errors }}
-                                        <input type="number" name="number" class="form-control" id="exampleFormControlInput6"
-                                        placeholder="Votre contact" required>
-                                        <a href="#" class="main-btn-four">Souscrire</a>
+                                        <input type="number" name="number" class="form-control" placeholder="Votre contact">
+                                        <button type="submit" class="main-btn-four">Souscrire</button>
                                     </form>
                                 </div>
 

@@ -60,7 +60,7 @@ urlpatterns = [
     path("privacy_policy/", privacy_policy, name="privacy_policy"),
     path("terms_of_service/", terms_of_service, name="terms_of_service"),
 
-    path('register-phone/', register_phone, name='register_phone'),
+    # path('register-phone/', register_phone, name='register_phone'),
     path('success/', success, name='success'),
 
     
