@@ -1008,7 +1008,7 @@ def register_phone(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('success')  # Redirect to a success page or the same page with a success message
+            return redirect('core:success')  # Redirect to a success page or the same page with a success message
     else:
         form = ContactForm()
     return render(request, 'register_phone.html', {'form': form})
