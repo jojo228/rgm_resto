@@ -20,6 +20,10 @@ class UserRegisterForm(UserCreationForm):
         fields = ["username", "email"]
 
 
+class OTPForm(forms.Form):
+    otp = forms.CharField(max_length=6)  # Assuming your OTP is 6 digits
+
+
 class ProfileForm(forms.ModelForm):
     full_name = forms.CharField(
         widget=forms.TextInput(attrs={"placeholder": "Full Name"})

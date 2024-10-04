@@ -67,11 +67,11 @@
                             placeholder="Email">
                     </div>
                     <div class="sign-up-from-inner">
-                        <label for="exampleFormControlInput1" class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" id="exampleFormControlInput1" placeholder="Mot de passe" required>
+                        <label for="passwordInput" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" id="passwordInput" placeholder="Mot de passe" required>
 
                         <div class="icon">
-                            <span>
+                            <span id="togglePassword">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -420,6 +420,18 @@
     <script src="{% static 'assets/js//jquery.shuffle.min.js' %}"></script>
     <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'assets/js/custom.js' %}"></script>
+
+    <!-- JavaScript to toggle password visibility -->
+    <script>
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('passwordInput');
+
+        togglePassword.addEventListener('click', function () {
+            // Toggle the type attribute between 'password' and 'text'
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        });
+    </script>
 
 
 

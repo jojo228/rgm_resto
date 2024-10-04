@@ -75,11 +75,11 @@
                                 {{form.email}}
                             </div>
                             <div class="sign-up-from-inner">
-                                <label for="exampleFormControlInput1" class="form-label">Password</label>
+                                <label for="id_password1" class="form-label">Password</label>
                                 {{form.password1}}
 
                                 <div class="icon">
-                                    <span>
+                                    <span id="togglePassword1">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -99,7 +99,7 @@
                                 {{form.password2}}
 
                                 <div class="icon">
-                                    <span>
+                                    <span id="togglePassword2">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -447,6 +447,25 @@
     <script src="{% static 'assets/js//jquery.shuffle.min.js' %}"></script>
     <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'assets/js/custom.js' %}"></script>
+
+    <!-- JavaScript to toggle password visibility -->
+    <script>
+        // Function to toggle password visibility
+        function togglePasswordVisibility(toggleElementId, passwordInputId) {
+            const toggleElement = document.getElementById(toggleElementId);
+            const passwordInput = document.getElementById(passwordInputId);
+    
+            toggleElement.addEventListener('click', function () {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+            });
+        }
+    
+        // Initialize toggle for both password fields
+        togglePasswordVisibility('togglePassword1', 'id_password1');
+        togglePasswordVisibility('togglePassword2', 'id_password2');
+    </script>
+
 
 
 
