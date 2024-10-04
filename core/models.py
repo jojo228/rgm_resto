@@ -235,6 +235,7 @@ class CatalogueCategory(models.Model):
     def __str__(self):
         return self.nom
     
+    
 class Catalogue(models.Model):
     nom = models.CharField(max_length=200)
     description = models.TextField()
