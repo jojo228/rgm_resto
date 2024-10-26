@@ -107,17 +107,17 @@
                                         {% for l in orders_list %}
                                         <tr>
                                             <td>#{{l.sku}}</td>
-                                            <td>{{l.order_date}}</td>
+                                            <td>{{l.order_date|date:"d-m-Y"}}</td>
                                             <td>{{l.price}} f</td>
                                             <td>
                                                 <div class="delete-action ">
                                                     {% if l.paid_status == True %}
                                                     <a href="" class="active">
-                                                        Active
+                                                        Payé
                                                     </a>
                                                     {% else %}
                                                     <a href="" class="active">
-                                                        Active
+                                                        Non Payé
                                                     </a>
                                                     {% endif %}
                                                 </div>
