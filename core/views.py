@@ -4,9 +4,11 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import View
 from regex import E
+import uuid
+from django.utils.decorators import method_decorator
+from django.core.paginator import Paginator
 from requests import session
 import requests
-from taggit.models import Tag
 from core.models import (
     CatalogueCategory,
     Event,
@@ -59,12 +61,10 @@ def index(request):
     return render(request, "index.html", locals())
 
 
-from django.core.paginator import Paginator
 
 def product_list_view(request):
     # Fetch all products and order them by id
     products = Product.objects.all().order_by("-id")
-    tags = Tag.objects.all().order_by("-id")[:6]
 
     # Set up pagination (6 products per page in this example)
     paginator = Paginator(products, 9)
@@ -77,7 +77,6 @@ def product_list_view(request):
 
     context = {
         "page_obj": page_obj,  # Pass the page object to the template
-        "tags": tags,
     }
 
     return render(request, "all-food.html", context)
@@ -157,18 +156,6 @@ def product_detail_view(request, pid):
 
     return render(request, "foods-details.html", context)
 
-
-def tag_list(request, tag_slug=None):
-    products = Product.objects.all().order_by("-id")
-
-    tag = None
-    if tag_slug:
-        tag = get_object_or_404(Tag, slug=tag_slug)
-        products = products.filter(tags__in=[tag])
-
-    context = {"products": products, "tag": tag}
-
-    return render(request, "tag.html", context)
 
 
 def ajax_add_review(request, pid):
@@ -425,20 +412,12 @@ class CheckoutView(View):
                 # Get default shipping address
                 shipping_address_qs = Address.objects.filter(
                     user=self.request.user,
-                    address_type='S',
                     default=True
                 )
                 if shipping_address_qs.exists():
                     context.update({'default_shipping_address': shipping_address_qs[0]})
 
-                # Get default billing address
-                billing_address_qs = Address.objects.filter(
-                    user=self.request.user,
-                    address_type='B',
-                    default=True
-                )
-                if billing_address_qs.exists():
-                    context.update({'default_billing_address': billing_address_qs[0]})
+            
 
                 return render(self.request, "checkout.html", context)
 
@@ -450,19 +429,12 @@ class CheckoutView(View):
 
         shipping_address = self.request.POST.get('shipping_address')
         shipping_address2 = self.request.POST.get('shipping_address2')
-        shipping_country = self.request.POST.get('shipping_country')
+        shipping_country = self.request.POST.get('id_shipping_country')
         shipping_zip = self.request.POST.get('shipping_zip')
-        billing_address = self.request.POST.get('billing_address')
-        billing_address2 = self.request.POST.get('billing_address2')
-        billing_country = self.request.POST.get('billing_country')
-        billing_zip = self.request.POST.get('billing_zip')
-        same_billing_address = self.request.POST.get('same_billing_address')
+        ville = self.request.POST.get('ville')
         use_default_shipping = self.request.POST.get('use_default_shipping')
         set_default_shipping = self.request.POST.get('set_default_shipping')
-        use_default_billing = self.request.POST.get('use_default_billing')
-        set_default_billing = self.request.POST.get('set_default_billing')
-
-
+        
 
         form = CheckoutForm(self.request.POST or None)
         try:
@@ -480,7 +452,6 @@ class CheckoutView(View):
                 if use_default_shipping:
                     shipping_address_qs = Address.objects.filter(
                         user=self.request.user,
-                        address_type='S',
                         default=True
                     )
                     if shipping_address_qs.exists():
@@ -493,17 +464,18 @@ class CheckoutView(View):
                 else:
                     shipping_address1 = form.cleaned_data.get('shipping_address')
                     shipping_address2 = form.cleaned_data.get('shipping_address2')
-                    shipping_country = form.cleaned_data.get('shipping_country')
+                    shipping_country = form.cleaned_data.get('id_shipping_country')
                     shipping_zip = form.cleaned_data.get('shipping_zip')
+                    ville = form.cleaned_data.get('ville')
 
-                    if is_valid_form([shipping_address1, shipping_country, shipping_zip]):
+                    if is_valid_form([shipping_address1, shipping_address2, shipping_country, shipping_zip, ville]):
                         shipping_address = Address(
                             user=self.request.user,
                             street_address=shipping_address1,
                             apartment_address=shipping_address2,
                             country=shipping_country,
                             zip=shipping_zip,
-                            address_type='S'
+                            ville=ville,
                         )
                         shipping_address.save()
                         order.shipping_address = shipping_address
@@ -516,59 +488,6 @@ class CheckoutView(View):
                     else:
                         messages.info(self.request, "Please fill in the required shipping address fields")
 
-                # Billing Address Handling
-                use_default_billing = form.cleaned_data.get('use_default_billing')
-                same_billing_address = form.cleaned_data.get('same_billing_address')
-
-                if same_billing_address:
-                    billing_address = shipping_address
-                    billing_address.pk = None  # Create a new instance
-                    billing_address.save()
-                    billing_address.address_type = 'B'
-                    billing_address.save()
-                    order.billing_address = billing_address
-                    order.save()
-
-                elif use_default_billing:
-                    billing_address_qs = Address.objects.filter(
-                        user=self.request.user,
-                        address_type='B',
-                        default=True
-                    )
-                    if billing_address_qs.exists():
-                        billing_address = billing_address_qs[0]
-                        order.billing_address = billing_address
-                        order.save()
-                    else:
-                        messages.info(self.request, "No default billing address available")
-                        return redirect('core:checkout')
-                else:
-                    billing_address1 = form.cleaned_data.get('billing_address')
-                    billing_address2 = form.cleaned_data.get('billing_address2')
-                    billing_country = form.cleaned_data.get('billing_country')
-                    billing_zip = form.cleaned_data.get('billing_zip')
-
-                    if is_valid_form([billing_address1, billing_country, billing_zip]):
-                        billing_address = Address(
-                            user=self.request.user,
-                            street_address=billing_address1,
-                            apartment_address=billing_address2,
-                            country=billing_country,
-                            zip=billing_zip,
-                            address_type='B'
-                        )
-                        billing_address.save()
-                        order.billing_address = billing_address
-                        order.save()
-
-                        set_default_billing = form.cleaned_data.get('set_default_billing')
-                        if set_default_billing:
-                            billing_address.default = True
-                            billing_address.save()
-                    else:
-                        messages.info(self.request, "Please fill in the required billing address fields")
-                
-
                 
 
                
@@ -579,8 +498,7 @@ class CheckoutView(View):
             return redirect("core:orders")
         
 
-import uuid
-from django.utils.decorators import method_decorator
+
 @method_decorator(csrf_exempt, name='dispatch')
 class PaymentInitializationView(View):
     def post(self, request, *args, **kwargs):
@@ -591,15 +509,10 @@ class PaymentInitializationView(View):
             shipping_address2 = data.get('shipping_address2')
             shipping_country = data.get('shipping_country')
             shipping_zip = data.get('shipping_zip')
-            billing_address = data.get('billing_address')
-            billing_address2 = data.get('billing_address2')
-            billing_country = data.get('billing_country')
-            billing_zip = data.get('billing_zip')
-            same_billing_address = data.get('same_billing_address') == 'true'
+            
             use_default_shipping = data.get('use_default_shipping') == 'true'
             set_default_shipping = data.get('set_default_shipping') == 'true'
-            use_default_billing = data.get('use_default_billing') == 'true'
-            set_default_billing = data.get('set_default_billing') == 'true'
+            
             payment_option = data.get('payment_option')
 
             # Vous pouvez ajouter ici la logique pour sauvegarder ces informations dans votre base de données si nécessaire
@@ -625,12 +538,16 @@ class PaymentInitializationView(View):
                 'description': 'Paiement de commande',
                 'return_url': request.build_absolute_uri('/payment/return/'),
                 'notify_url': request.build_absolute_uri('/payment/notify/'),
+                'customer_id': request.user.id if request.user.is_authenticated else 'Anonymous',
                 'customer_name': request.user.username if request.user.is_authenticated else 'Anonymous',
+                'customer_surname': request.user.username if request.user.is_authenticated else 'Anonymous',
                 'customer_email': request.user.email if request.user.is_authenticated else 'anonymous@example.com',
                 'customer_phone_number': '00000000',  # Remplacez par un numéro valide si disponible
                 'customer_address': shipping_address,
-                'customer_city': shipping_country,
-                'customer_country': shipping_country,
+                'customer_city': 'Lome',
+                'customer_state': 'Lome',
+                'customer_country': 'TG',
+                'customer_zip_code': shipping_zip,
             }
 
             # Envoyer la requête à CinetPay
@@ -782,7 +699,8 @@ class PaymentReturnView(View):
 @login_required
 def customer_dashboard(request):
     orders_list = CartOrder.objects.filter(user=request.user).order_by("-id")
-    address = Address.objects.filter(user=request.user)
+    orders_count = CartOrder.objects.filter(user=request.user).count()
+    address = Address.objects.filter(user=request.user, default=True).last()
 
     orders = (
         CartOrder.objects.annotate(month=ExtractMonth("order_date"))
@@ -817,6 +735,7 @@ def customer_dashboard(request):
     context = {
         "user_profile": user_profile,
         "orders": orders,
+        "orders_count": orders_count,
         "orders_list": orders_list,
         "address": address,
         "month": month,
@@ -1011,7 +930,7 @@ def register_phone(request):
             return redirect('core:success')  # Redirect to a success page or the same page with a success message
     else:
         form = ContactForm()
-    return render(request, 'register_phone.html', {'form': form})
+    return render(request, 'index.html', {'form': form})
 
 
 def success(request):

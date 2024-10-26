@@ -12,7 +12,7 @@
                 <div class="row  ">
                     <div class="col-lg-12">
                         <div class="inner-banner-head">
-                            <h1>User Dashboard</h1>
+                            <h1>Taableau De Bord</h1>
                         </div>
 
                         <div class="inner-banner-item">
@@ -29,7 +29,7 @@
                                 </span>
                             </div>
                             <div class="left">
-                                <span>User Dashboard</span>
+                                <span>Taableau De Bord</span>
                             </div>
                         </div>
                     </div>
@@ -55,7 +55,7 @@
 
                         <div class="dashboard-item-taitel">
                             <h4>Dashboard</h4>
-                            <p>Let’s check your today</p>
+                            <p>Vérifions votre aujourd'hui</p>
                         </div>
 
 
@@ -81,13 +81,13 @@
                                             </span>
                                         </div>
                                         <div class="dashboard-item-text">
-                                            <h3>125+</h3>
-                                            <p>Total Orders</p>
+                                            <h3>{{orders_count}}</h3>
+                                            <p>Commandes Total</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4  d-md-none d-lg-block" data-aos="fade-left">
+                            <!-- <div class="col-lg-4  d-md-none d-lg-block" data-aos="fade-left">
                                 <div class="dashboard-item">
                                     <div class="dashboard-item-inner">
                                         <div class="dashboard-item-icon">
@@ -115,8 +115,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6" data-aos="fade-left">
+                            </div> -->
+                            <!-- <div class="col-lg-4 col-md-6" data-aos="fade-left">
                                 <div class="dashboard-item">
                                     <div class="dashboard-item-inner">
                                         <div class="dashboard-item-icon">
@@ -144,7 +144,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="row dashboard-item-address">
                             <div class="col-lg-6">
@@ -153,9 +153,9 @@
 
                                     <div class="shopping-cart-address-one-item">
                                         <div class="text">
-                                            <h4>Address #2</h4>
+                                            <h4>Adresses</h4>
                                         </div>
-                                        <div class="delet-btn">
+                                        <!-- <div class="delet-btn">
                                             <a href="#">
                                                 <span>
                                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -167,87 +167,33 @@
                                                     </svg>
                                                 </span>
                                             </a>
-                                        </div>
+                                        </div> -->
                                     </div>
 
 
-                                    <address>Full Name :<b>Jost Batler</b>
+                                    <address>Utilisateur :<b> {{request.user}}</b>
                                         <br>Email :
-                                        <a href="mailto:jostbatler@gmail.com"><b>jostbatler@gmail.com</b></a>
+                                        <a href="mailto:jostbatler@gmail.com"><b> {{request.user.email}}</b></a>
                                         <br>Phone
-                                        <a href="tel:+17077970462"><b>+228 22 55 69 48</b>
+                                        <a href="tel:+17077970462"><b>{{request.user.profile.phone}}</b>
                                         </a>
 
                                         <br>Country :
-                                        <a href="#"><b>Bangladesh</b></a>
+                                        <a href="#"><b> {{address.country}}</b></a>
                                         <br>State :
-                                        <a href="#"><b>Dhaka</b></a>
+                                        <a href="#"><b> {{address.ville}}</b></a>
                                         <br>City :
-                                        <a href="#"><b>Dhaka</b></a>
+                                        <a href="#"><b> {{address.ville}}</b></a>
                                         <br>Address :
-                                        <a href="#"> <b>Mirpur-11, Dhaka, Bangladesh</b></a>
+                                        <a href="#"> <b> {{address.street_address}}, {{address.apartment_address}}</b></a>
                                     </address>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-
-                                <div class="shopping-cart-address-one shopping-cart-address-two  ">
-
-                                    <div class="shopping-cart-address-one-item">
-                                        <div class="text">
-                                            <h4>Address #1</h4>
-                                        </div>
-                                        <div class="delet-btn">
-                                            <a href="#">
-                                                <span>
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M5 8V18C5 20.2091 6.79086 22 9 22H15C17.2091 22 19 20.2091 19 18V8M14 11V17M10 11L10 17M16 5L14.5937 2.8906C14.2228 2.3342 13.5983 2 12.9296 2H11.0704C10.4017 2 9.7772 2.3342 9.40627 2.8906L8 5M16 5H8M16 5H21M8 5H3"
-                                                            stroke="#F01543" stroke-width="1.5" stroke-linecap="round"
-                                                            stroke-linejoin="round"></path>
-                                                    </svg>
-                                                </span>
-                                            </a>
-                                        </div>
-                                    </div>
-
-
-                                    <address>Full Name :<b>Jost Batler</b>
-                                        <br>Email :
-                                        <a href="mailto:jostbatler@gmail.com"><b>jostbatler@gmail.com</b></a>
-                                        <br>Phone
-                                        <a href="tel:+18040005262"><b> +1 804 000 5262</b>
-                                        </a>
-
-                                        <br>Country :
-                                        <a href="#"><b>Bangladesh</b></a>
-                                        <br>State :
-                                        <a href="#"><b> Narayanganj</b></a>
-                                        <br>City :
-                                        <a href="#"><b> Narayanganj</b></a>
-                                        <br>Address :
-                                        <a href="#"> <b>Rupganj-1460, Narayanganj </b></a>
-                                    </address>
-                                </div>
-                            </div>
+                            
                         </div>
 
 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="delete-account">
-                                    <div class="delete-account-text">
-                                        <h4>Delete Account</h4>
-                                        <p>Once you delete your account, there is no going back. Please be certain.</p>
-                                    </div>
-
-                                    <div class="delete-account-btn">
-                                        <a href="#" class="main-btn-four">Delete Account</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    
 
 
                     </div>

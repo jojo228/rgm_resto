@@ -754,14 +754,14 @@ p {
   gap: 20px;
 }
 .header .menu-bg .nav-login-btn-main .main-btn-four {
-  height: 52px;
-  font-size: 16px;
+  height: 47px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
 }
 .header .menu-bg .nav-login-btn-main .main-btn {
-  height: 52px;
-  font-size: 16px;
+  height: 47px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   border: 1.5px solid var(--grey-scale-500);
@@ -1230,11 +1230,11 @@ p {
   background-color: var(--primary-color);
   border: 1px solid var(--primary-color);
   color: #fff;
-  padding: 13px 32px;
+  padding: 10px 29px;
   transition: all 0.5s linear;
   overflow: hidden;
   z-index: 1;
-  font-size: 10px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 600;
   letter-spacing: -0.1px;
@@ -4927,7 +4927,7 @@ p {
   padding-top: 23px;
 }
 .privacy .privacy-text-main .privacy-text-main-text ul li {
-  font-size: 18px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 175%;
@@ -7057,7 +7057,7 @@ p {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 }
 .footer .quick-line-btn .icon {
   position: absolute;

@@ -15,11 +15,6 @@ STATUS_CHOICE = (
     ("delivered", "Delivered"),
 )
 
-ADDRESS_CHOICES = (
-    ('B', 'Billing'),
-    ('S', 'Shipping'),
-)
-
 
 STATUS = (
     ("draft", "Draft"),
@@ -205,9 +200,9 @@ class Address(models.Model):
                              on_delete=models.CASCADE)
     street_address = models.CharField(max_length=100)
     apartment_address = models.CharField(max_length=100)
-    country = CountryField(multiple=False)
+    country = CountryField(multiple=False, null=True, blank=True)
+    ville = models.CharField(max_length=100, null=True)
     zip = models.CharField(max_length=100)
-    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
     default = models.BooleanField(default=False)
 
     def __str__(self):
