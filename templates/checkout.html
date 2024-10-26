@@ -4,213 +4,151 @@
 {% block content %}
 
 
-    <main>
+<main>
 
-        <!-- banner  -->
+  <!-- banner  -->
 
-        <div class="inner-banner">
-            <div class="container">
-                <div class="row  ">
-                    <div class="col-lg-12">
-                        <div class="inner-banner-head">
-                            <h1>Shopping Cart</h1>
-                        </div>
+  <div class="inner-banner">
+    <div class="container">
+      <div class="row  ">
+        <div class="col-lg-12">
+          <div class="inner-banner-head">
+            <h1>Panier</h1>
+          </div>
 
-                        <div class="inner-banner-item">
-                            <div class="left">
-                                <a href="{% url 'core:index' %}">Accueil</a>
-                            </div>
-                            <div class="icon">
-                                <span>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M10 7L14 12L10 17" stroke="#E5E6EB" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </span>
-                            </div>
-                            <div class="left">
-                                <span>Shopping Cart</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <div class="inner-banner-item">
+            <div class="left">
+              <a href="{% url 'core:index' %}">Accueil</a>
             </div>
+            <div class="icon">
+              <span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 7L14 12L10 17" stroke="#E5E6EB" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </div>
+            <div class="left">
+              <span>Panier</span>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <!-- banner  -->
+  <section class="shopping-cart-two">
+    <div class="container">
+      <form method="POST" action="{% url 'core:checkout' %}" class="card-body">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-lg-8 col-md-6 ">
+
+            <h3>Adresse de livraison</h3>
+
+            <div>
+
+              <div class="md-form mb-5">
+                <label for="shipping_address" class="form-label">Adresse</label>
+                <input type='text' placeholder='Quartier cacavelli, Rue..' id='shipping_address' name='shipping_address'
+                  class='form-control' />
+              </div>
+
+              <div class="md-form mb-5">
+                <label for="shipping_address2" class="form-label">Adresse 2 (optionel)</label>
+                <input type='text' placeholder='Appartement N˚...' id='shipping_address2' name='shipping_address2'
+                  class='form-control' />
+              </div>
+
+              <div class="row">
+                <div class="col-lg-4 col-md-12 mb-4">
+                  <label for="country">Pays</label>
+                  {{ form.shipping_country }}
+                  <div class="invalid-feedback">
+                    Veuillez sélectionner un pays valide.
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                  <label for="shipping_zip">Ville</label>
+                  <input type='text' placeholder='Ville...' id='ville' name='ville' class='form-control' />
+                  <div class="invalid-feedback">
+                    Ville requis.
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                  <label for="shipping_zip">Zip</label>
+                  <input type='text' placeholder='Zip code' id='shipping_zip' name='shipping_zip'
+                    class='form-control' />
+                  <div class="invalid-feedback">
+                    Code postal requis.
+                  </div>
+                </div>
+              </div>
 
 
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="set_default_shipping"
+                  id="set_default_shipping">
+                <label class="custom-control-label" for="set_default_shipping">Enregistrer en tant qu'adresse
+                  d'expédition par défaut</label>
+              </div>
 
-        <!-- Shopping Cart  start -->
+            </div>
+
+            {% if default_shipping_address %}
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" name="use_default_shipping" id="use_default_shipping">
+              <label class="custom-control-label" for="use_default_shipping">Utiliser l'adresse de livraison par défaut:
+                {{ default_shipping_address.street_address|truncatechars:10 }}</label>
+            </div>
+            {% endif %}
+
+          </div>
 
 
+          <div class="col-lg-4 col-md-6">
+            <div class="cart-summary-box">
+              <div class="cart-summary-box-text">
+                <h3>Votre Panier</h3>
+              </div>
 
-        <section class="shopping-cart-two">
-            <div class="container">
-                <form method="POST" class="card-body" id="checkout_form">
-                    {% csrf_token %}
-                <div class="row">
-                    <div class="col-lg-8 col-md-6 ">
-                        
-              
-                            <h3>Adresse de livraison</h3>
-              
-                            <div class='hideable_shipping_form'>
-              
-                              <div class="md-form mb-5">
-                                <label for="shipping_address" class="form-label">Adresse</label>
-                                <input type='text' placeholder='Quartier cacavelli, Rue..' id='shipping_address' name='shipping_address' class='form-control' />
-                              </div>
-              
-                              <div class="md-form mb-5">
-                                <label for="shipping_address2" class="form-label">Adresse 2 (optionel)</label>
-                                <input type='text' placeholder='Appartement N˚...' id='shipping_address2' name='shipping_address2' class='form-control' />
-                              </div>
-              
-                              <div class="row">
-                                <div class="col-lg-4 col-md-12 mb-4">
-                                  <label for="country">Pays</label>
-                                  {{ form.shipping_country }}
-                                  <div class="invalid-feedback">
-                                    Veuillez sélectionner un pays valide.
-                                  </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 mb-4">
-                                  <label for="shipping_zip">Zip</label>
-                                  <input type='text' placeholder='Zip code' id='shipping_zip' name='shipping_zip' class='form-control' />
-                                  <div class="invalid-feedback">
-                                    Code postal requis.
-                                  </div>
-                                </div>
-                              </div>
-              
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" name="same_billing_address" id="same_billing_address">
-                                <label class="custom-control-label" for="same_billing_address">L'adresse de facturation est la même que mon adresse d'expédition</label>
-                              </div>
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" name="set_default_shipping" id="set_default_shipping">
-                                <label class="custom-control-label" for="set_default_shipping">Enregistrer en tant qu'adresse d'expédition par défaut</label>
-                              </div>
-              
-                            </div>
-              
-                            {% if default_shipping_address %}
-                            <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" name="use_default_shipping" id="use_default_shipping">
-                              <label class="custom-control-label" for="use_default_shipping">Utiliser l'adresse de livraison par défaut: {{ default_shipping_address.street_address|truncatechars:10 }}</label>
-                            </div>
-                            {% endif %}
-              
-                            <hr>
-              
-                            <h3>Adresse de facturation</h3>
-              
-                            <div class='hideable_billing_form'>
-                              <div class="md-form mb-5">
-                                <label for="billing_address" class="">Adresse</label>
-                                <input type='text' placeholder='Quartier cacavelli, Rue..' id='billing_address' name='billing_address' class='form-control' />
-                              </div>
-              
-                              <div class="md-form mb-5">
-                                <label for="billing_address2" class="form-label">Adresse 2 (optionel)</label>
-                                <input type='text' placeholder='Appartement N˚...' id='billing_address2' name='billing_address2' class='form-control' />
-                              </div>
-              
-                              <div class="row">
-                                <div class="col-lg-4 col-md-12 mb-4">
-                                  <label for="country">Pays</label>
-                                  {{ form.billing_country }}
-                                  <div class="invalid-feedback">
-                                    Veuillez sélectionner un pays valide.
-                                  </div>
-                                </div>
-              
-                                <div class="col-lg-4 col-md-6 mb-4">
-                                  <label for="billing_zip">Zip</label>
-                                  <input type='text' placeholder='Zip code' id='billing_zip' name='billing_zip' class='form-control' />
-                                  <div class="invalid-feedback">
-                                    Code postal requis.
-                                  </div>
-                                </div>
-              
-                              </div>
-              
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" name="set_default_billing" id="set_default_billing">
-                                <label class="custom-control-label" for="set_default_billing">Enregistrer en tant qu'adresse de facturation par défaut</label>
-                              </div>
-              
-                            </div>
-              
-                            {% if default_billing_address %}
-                            <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" name="use_default_billing" id="use_default_billing">
-                              <label class="custom-control-label" for="use_default_billing">Utilisez l'adresse de facturation par défaut: {{ default_billing_address.street_address|truncatechars:10 }}</label>
-                            </div>
-                            {% endif %}
-                            <hr>
-              
-                            
-              
-                          
+              <div class="cart-summary-box-item-top">
+                {% for product_id, item in cart_data.items %}
+                <div class="cart-summary-box-item">
+                  <a href="#">
+                    <div class="cart-summary-box-inner">
+                      <div class="cart-summary-box-img">
+                        <img src="{{ item.image }}" style="width: 100px; height: 100px; object-fit: cover;" alt="img">
+                      </div>
+                      <div class="cart-summary-box-text-two">
+                        <h4>{{ item.title }}</h4>
+                        <h6><span>{{item.price|intcomma}} x </span> {{item.qty}}</h6>
+                        <p>{% widthratio item.price 1 item.qty %}f</p>
+                      </div>
                     </div>
+                  </a>
+                </div>
+                {% endfor %}
+            </div>
 
 
-                    <div class="col-lg-4 col-md-6">
-                        <div class="cart-summary-box">
-                            <div class="cart-summary-box-text">
-                                <h3>Votre Panier</h3>
-                            </div>
+              <div class="apply-coupon">
+                <div class="apply-coupon-taitel">
+                  <h4>Apply Coupon</h4>
+                </div>
 
-                           
-
-
-                            <div class="cart-summary-box-item-top">
-                                {% for product_id, item in cart_data.items %}
-                                <div class="cart-summary-box-item">
-                                    <a href="#">
-                                        <div class="cart-summary-box-inner">
-                                            <div class="cart-summary-box-img">
-                                                <img src="{{ item.image }}" style="width: 100px; height: 100px; object-fit: cover;" alt="img">
-                                            </div>
-                                            <div class="cart-summary-box-text-two">
-                                                <h4>{{ item.title }}</h4>
-                                                <h6><span>{{item.price|intcomma}} x </span> {{item.qty}}</h6>
-                                                <p>{% widthratio item.price 1 item.qty %}f</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                {% endfor %}
-                               
+                <div class="apply-coupon-btn">
+                  <div class="apply-coupon-form">
+                    <input type="email" class="form-control" id="exampleFormControlInput6" placeholder="Coupon">
+                  </div>
+                  <div class="apply-coupon-btn-two">
+                    <a href="#">Apply</a>
+                  </div>
+                </div>
 
 
-
-
-
-                            </div>
-
-
-                            <div class="apply-coupon">
-                                <div class="apply-coupon-taitel">
-                                    <h4>Apply Coupon</h4>
-                                </div>
-
-                                <div class="apply-coupon-btn">
-                                    <div class="apply-coupon-form">
-                                        <input type="email" class="form-control" id="exampleFormControlInput6"
-                                            placeholder="Coupon">
-                                    </div>
-                                    <div class="apply-coupon-btn-two">
-                                        <a href="#">Apply</a>
-                                    </div>
-                                </div>
-
-
-                                <div class="apply-coupon-box">
-                                    <!-- <div class="shopping-cart-list">
+                <div class="apply-coupon-box">
+                  <!-- <div class="shopping-cart-list">
                                         <div class="shopping-cart-list-text">
                                             <h4>Subtotal</h4>
                                             <a href="#">$120</a>
@@ -224,129 +162,93 @@
                                             <a href="#">+$10.00</a>
                                         </div>
                                     </div> -->
-                                    <div class="shopping-cart-list shopping-cart-list-btm ">
-                                        <div class="shopping-cart-list-text">
-                                            <h4>Total</h4>
-                                            <a href="#">{{cart_total_amount|floatformat:0}}f</a>
-                                        </div>
-                                    </div>
-
-                                    <div class="shopping-cart-list-btn">
-                                        <button class="main-btn-six" id="pay_button">
-                                            Payez
-
-                                            <span>
-                                                <svg width="14" height="10" viewBox="0 0 14 10" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M9 9L13 5M13 5L9 1M13 5L1 5" stroke-width="1.5"
-                                                        stroke-linecap="round" stroke-linejoin="round" />
-                                                </svg>
-                                            </span>
-                                        </button>
-                                    </div>
-                                </div>
-
-
-
-
-
-                            </div>
-
-
-
-
-
-                        </div>
-
-
+                  <div class="shopping-cart-list shopping-cart-list-btm ">
+                    <div class="shopping-cart-list-text">
+                      <h4>Total</h4>
+                      <a href="#">{{cart_total_amount|floatformat:0}}f</a>
                     </div>
+                  </div>
 
+                  <div class="shopping-cart-list-btn">
+                    <button type="submit" class="main-btn-six" id="pay_button">
+                      Payez
 
-
-
+                      <span>
+                        <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M9 9L13 5M13 5L9 1M13 5L1 5" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
                 </div>
-            </form>
+              </div>
             </div>
-        </section>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
 
 
-    </main>
+</main>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#pay_button').on('click', function(event) {
-                event.preventDefault(); // Empêcher la redirection automatique
-    
-                // Récupérer les données du formulaire
-                var formData = {
-                    shipping_address: $('#shipping_address').val(),
-                    shipping_address2: $('#shipping_address2').val(),
-                    shipping_country: $('#shipping_country').val(),
-                    shipping_zip: $('#shipping_zip').val(),
-                    billing_address: $('#billing_address').val(),
-                    billing_address2: $('#billing_address2').val(),
-                    billing_country: $('#billing_country').val(),
-                    billing_zip: $('#billing_zip').val(),
-                    same_billing_address: $('#same_billing_address').is(':checked'),
-                    use_default_shipping: $('#use_default_shipping').is(':checked'),
-                    set_default_shipping: $('#set_default_shipping').is(':checked'),
-                    use_default_billing: $('#use_default_billing').is(':checked'),
-                    set_default_billing: $('#set_default_billing').is(':checked'),
-                    payment_option: $('input[name="payment_option"]:checked').val(),
-                };
-    
-                console.log('Données du formulaire:', formData); // Pour débogage
-    
-                $.ajax({
-                    url: "{% url 'core:payment_initialize' %}",
-                    method: "POST",
-                    data: formData,
-                    dataType: "json",
-                    success: function(response) {
-                        if (response.payment_url) {
-                            window.location.href = response.payment_url; // Rediriger vers CinetPay
-                        } else if (response.error) {
-                            alert('Erreur: ' + response.error);
-                        } else {
-                            alert('Une erreur inconnue est survenue.');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Erreur AJAX:', error);
-                        alert('Une erreur est survenue lors de l\'initialisation du paiement.');
-                    }
-                });
-            });
-        });
-    </script>
-    
-    
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#pay_button').on('click', function (event) {
+      event.preventDefault(); // Empêcher la redirection automatique
 
-<script>
-    var hideable_shipping_form = $('.hideable_shipping_form');
-    var hideable_billing_form = $('.hideable_billing_form');
-    
-    var use_default_shipping = document.querySelector("input[name=use_default_shipping]");
-    var use_default_billing = document.querySelector("input[name=use_default_billing]");
-    
-    use_default_shipping.addEventListener('change', function() {
-      if (this.checked) {
-        hideable_shipping_form.hide();
-      } else {
-        hideable_shipping_form.show();
-      }
-    })
-    
-    use_default_billing.addEventListener('change', function() {
-      if (this.checked) {
-        hideable_billing_form.hide();
-      } else {
-        hideable_billing_form.show();
-      }
-    })
-    
-    </script>
+      // Récupérer les données du formulaire
+      var formData = {
+        shipping_address: $('#shipping_address').val(),
+        shipping_address2: $('#shipping_address2').val(),
+        shipping_country: $('#id_shipping_country').val(),
+        shipping_zip: $('#shipping_zip').val(),
+        ville: $('#ville').val(),
+        set_default_shipping: $('#set_default_shipping').is(':checked'),
+        use_default_shipping: $('#use_default_shipping').is(':checked'),
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      };
+
+      // Soumettre à la vue 'core:checkout'
+      $.ajax({
+        url: "{% url 'core:checkout' %}",
+        method: "POST",
+        data: formData,
+        success: function (response) {
+          console.log("Commande traitée avec succès");
+        },
+        error: function (xhr, status, error) {
+          console.error('Erreur lors du traitement de la commande:', error);
+          alert("Erreur lors du traitement de la commande.");
+        }
+      });
+
+      // Soumettre à la vue 'core:payment_initialize' pour l'initialisation de paiement
+      $.ajax({
+        url: "{% url 'core:payment_initialize' %}",
+        method: "POST",
+        data: formData,
+        dataType: "json",
+        success: function (response) {
+          if (response.payment_url) {
+            window.location.href = response.payment_url; // Redirection vers le lien de paiement
+          } else if (response.error) {
+            alert('Erreur: ' + response.error);
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error('Erreur AJAX:', error);
+          alert('Une erreur est survenue lors de l\'initialisation du paiement.');
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
 
 {% endblock %}
