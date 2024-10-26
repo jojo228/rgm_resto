@@ -4,9 +4,6 @@
 /media
 .env
 /migrations
-<<<<<<< HEAD
 core/__pycache__/
 /core/__pycache__
-=======
 /core/__pycache__/
->>>>>>> fc58b12b98e227a4989d97130a35b65dfe9e34c3
