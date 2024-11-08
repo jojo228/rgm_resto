@@ -8,23 +8,25 @@
         <div class="row  ">
             <div class="col-lg-12">
                 <div class="inner-banner-head">
-                    <h1>Statut du paiement: {{ payment_status }}</h1>
+                    <h1>{{ payment_status }}</h1>
                 </div>
 
                 <div class="inner-banner-item">
+                    {% if payment_status == "FAILED" %}
                     <div class="left">
-                        {% if payment_status == "Success" %}
-                        <span>Votre paiement a été effectué avec succès !</span>
-                        {% elif payment_status == "Failed" %}
-                            <span>Le paiement a échoué. Veuillez réessayer.</span>
-                        {% else %}
-                            <span>Le paiement est en attente. Veuillez réessayer.</span>
-                        {% endif %}
+                        <a href="{% url 'core:checkout' %}" class="main-btn-six">Reprendre le paiement</a>
+                    </div>
+                    {% endif %}
+                    leerr
+                    <div class="left">
+                        <a href="{% url 'core:dashboard' %}" class="main-btn-six">Mon Tableau De Bord</a>
+                    </div>
+                    lerrr
+                    <div class="left">
+                        <a href="{% url 'core:product-list' %}" class="main-btn-six">Menu</a>
                     </div>
                     
-                    <div class="left">
-                        <span>Contact</span>
-                    </div>
+                    
                 </div>
             </div>
         </div>

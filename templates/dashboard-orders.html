@@ -107,7 +107,7 @@
                                         {% for l in orders_list %}
                                         <tr>
                                             <td>#{{l.sku}}</td>
-                                            <td>{{l.order_date}}</td>
+                                            <td>{{l.order_date|date:"d-m-Y"}}</td>
                                             <td>{{l.price}} f</td>
                                             <td>
                                                 <div class="delete-action ">

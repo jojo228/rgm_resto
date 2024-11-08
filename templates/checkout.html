@@ -54,10 +54,24 @@
                   class='form-control' />
               </div>
 
-              <div class="md-form mb-5">
-                <label for="shipping_address2" class="form-label">Adresse 2 (optionel)</label>
-                <input type='text' placeholder='Appartement N˚...' id='shipping_address2' name='shipping_address2'
-                  class='form-control' />
+              <div class="row">
+                <div class="col-lg-6 col-md-12 mb-4">
+                  <div class="md-form mb-5">
+                    <label for="shipping_address2" class="form-label">Adresse 2 (Optionel)</label>
+                    <input type='text' placeholder='Appartement N˚...' id='shipping_address2' name='shipping_address2'
+                      class='form-control' />
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12 mb-4">
+                  <div class="md-form mb-5">
+                    <label for="whatsapp" class="form-label">Numéro Whatsapp</label>
+                    <input type="text" placeholder='90 02...' id='whatsapp' name='whatsapp'
+                      class='form-control' />
+                  </div>
+                </div>
+              
+                
               </div>
 
               <div class="row">
@@ -99,7 +113,7 @@
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" name="use_default_shipping" id="use_default_shipping">
               <label class="custom-control-label" for="use_default_shipping">Utiliser l'adresse de livraison par défaut:
-                {{ default_shipping_address.street_address|truncatechars:10 }}</label>
+                {{ default_shipping_address.street_address }}</label>
             </div>
             {% endif %}
 
@@ -206,6 +220,7 @@
         shipping_country: $('#id_shipping_country').val(),
         shipping_zip: $('#shipping_zip').val(),
         ville: $('#ville').val(),
+        whatsapp: $('#whatsapp').val(),
         set_default_shipping: $('#set_default_shipping').is(':checked'),
         use_default_shipping: $('#use_default_shipping').is(':checked'),
         csrfmiddlewaretoken: '{{ csrf_token }}'
@@ -220,7 +235,7 @@
           console.log("Commande traitée avec succès");
         },
         error: function (xhr, status, error) {
-          console.error('Erreur lors du traitement de la commande:', error);
+          // console.error('Erreur lors du traitement de la commande:', error);
           alert("Erreur lors du traitement de la commande.");
         }
       });

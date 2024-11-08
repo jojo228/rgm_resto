@@ -111,19 +111,20 @@ class CartOrder(models.Model):
     ordered = models.BooleanField(default=False)
     shipping_address = models.ForeignKey(
         'Address', related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
-    billing_address = models.ForeignKey(
-        'Address', related_name='billing_address', on_delete=models.SET_NULL, blank=True, null=True)
     sku = ShortUUIDField(
         null=True,
         blank=True,
         length=5,
-        prefix="SKU",
+        prefix="RGM",
         max_length=20,
         alphabet="abcdefgh12345",
     )
 
     class Meta:
         verbose_name_plural = "Cart Order"
+
+    def __str__(self):
+        return f"{self.user} - {self.sku}"
 
 
 class CartOrderProducts(models.Model):
@@ -140,15 +141,17 @@ class CartOrderProducts(models.Model):
     class Meta:
         verbose_name_plural = "Cart Order Items"
 
-    def order_img(self):
+    def order_image(self):
         return mark_safe(
-            '<img src="/media/%s" width="50" height="50" />' % (self.image)
+            '<img src="%s" width="50" height="50" />' % (self.image)
         )
+    
+    def __str__(self):
+        return f"{self.user} - {self.order}"
     
 
 class Payment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    order = models.ForeignKey('CartOrder', on_delete=models.CASCADE)
+    order = models.ForeignKey(CartOrder, on_delete=models.CASCADE)
     transaction_id = models.CharField(max_length=100, unique=True)
     amount = models.FloatField()
     status = models.CharField(max_length=20, default='pending')  # pending, successful, failed
@@ -203,6 +206,7 @@ class Address(models.Model):
     country = CountryField(multiple=False, null=True, blank=True)
     ville = models.CharField(max_length=100, null=True)
     zip = models.CharField(max_length=100)
+    whatsapp = models.CharField(max_length=8)
     default = models.BooleanField(default=False)
 
     def __str__(self):

@@ -49,7 +49,7 @@ class CartOrderAdmin(admin.ModelAdmin):
 
 
 class CartOrderProductsAdmin(admin.ModelAdmin):
-    list_display = ["order", "item", "image", "qty", "price", "total"]
+    list_display = ["user","order", "item", "order_image", "qty", "price", "total"]
 
 
 class ProductReviewAdmin(admin.ModelAdmin):
@@ -60,6 +60,10 @@ class wishlistAdmin(admin.ModelAdmin):
     list_display = ["user", "product", "date"]
 
 
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ["order", "transaction_id", "amount", "status"]
+
+
 class AddressAdmin(admin.ModelAdmin):
     list_display = [
         'user',
@@ -68,9 +72,10 @@ class AddressAdmin(admin.ModelAdmin):
         'country',
         'zip',
         'ville',
+        'whatsapp',
         'default'
     ]
-    list_filter = ['default', 'ville', 'country']
+    list_filter = ['default', 'ville', 'country', 'whatsapp']
     search_fields = ['user', 'street_address', 'apartment_address', 'zip']
 
 
@@ -81,7 +86,7 @@ admin.site.register(CartOrderProducts, CartOrderProductsAdmin)
 admin.site.register(ProductReview, ProductReviewAdmin)
 admin.site.register(wishlist_model, wishlistAdmin)
 admin.site.register(Address, AddressAdmin)
-admin.site.register(Payment)
+admin.site.register(Payment, PaymentAdmin)
 admin.site.register(Contact)
 admin.site.register(Event)
 admin.site.register(Catalogue)

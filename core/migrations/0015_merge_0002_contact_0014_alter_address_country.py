@@ -6,7 +6,6 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0002_contact'),
         ('core', '0014_alter_address_country'),
     ]
 

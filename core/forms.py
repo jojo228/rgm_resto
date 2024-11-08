@@ -32,6 +32,7 @@ class CheckoutForm(forms.Form):
         }))
     shipping_zip = forms.CharField(required=False)
     ville = forms.CharField(required=False) 
+    whatsapp = forms.CharField(required=False) 
     set_default_shipping = forms.BooleanField(required=False)
     use_default_shipping = forms.BooleanField(required=False)
 

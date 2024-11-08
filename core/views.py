@@ -369,55 +369,32 @@ class CheckoutView(View):
             cart_total_amount = 0
             total_amount = 0
 
-            # Checking if cart_data_obj session exists
             if "cart_data_obj" in self.request.session:
-                # Getting total amount for Paypal Amount
                 for p_id, item in self.request.session["cart_data_obj"].items():
                     cleaned_price = item["price"].replace(',', '').replace('f', '').strip()
                     total_amount += int(item["qty"]) * float(cleaned_price)
-            
 
-                # Calculate cart total amount and total items
                 cart_data = self.request.session.get("cart_data_obj", {})
                 totalcartitems = len(cart_data)
 
-                order = CartOrder.objects.create(user=self.request.user, ordered=False, price=cart_total_amount)
+                order = CartOrder.objects.filter(user=self.request.user, ordered=False).first()
                 form = CheckoutForm()
-
-                # Getting total amount for The Cart
-                for p_id, item in self.request.session["cart_data_obj"].items():
-                    cleaned_price = item["price"].replace(',', '').replace('f', '').strip()
-                    cart_total_amount += int(item["qty"]) * float(cleaned_price)
-
-                    cart_order_products = CartOrderProducts.objects.create(
-                        user=self.request.user,
-                        order=order,
-                        # invoice_no="INVOICE_NO-" + str(order.id),  # INVOICE_NO-5,
-                        item=item["title"],
-                        image=item["image"],
-                        qty=item["qty"],
-                        price=cleaned_price,
-                        total=float(item["qty"]) * float(cleaned_price),
-                    )
 
                 context = {
                     'form': form,
                     'order': order,
-                    'DISPLAY_COUPON_FORM': True,  # Assuming you have a coupon form
+                    'DISPLAY_COUPON_FORM': True,
                     "cart_data": cart_data,
                     "totalcartitems": totalcartitems,
-                    "cart_total_amount": cart_total_amount,
+                    "cart_total_amount": total_amount,
                 }
 
-                # Get default shipping address
                 shipping_address_qs = Address.objects.filter(
                     user=self.request.user,
                     default=True
                 )
                 if shipping_address_qs.exists():
                     context.update({'default_shipping_address': shipping_address_qs[0]})
-
-            
 
                 return render(self.request, "checkout.html", context)
 
@@ -426,28 +403,52 @@ class CheckoutView(View):
             return redirect("core:checkout")
 
     def post(self, *args, **kwargs):
+        form = CheckoutForm(self.request.POST or None)
+        total_amount = 0
 
         shipping_address = self.request.POST.get('shipping_address')
         shipping_address2 = self.request.POST.get('shipping_address2')
         shipping_country = self.request.POST.get('id_shipping_country')
         shipping_zip = self.request.POST.get('shipping_zip')
         ville = self.request.POST.get('ville')
+        whatsapp = self.request.POST.get('whatsapp')
         use_default_shipping = self.request.POST.get('use_default_shipping')
         set_default_shipping = self.request.POST.get('set_default_shipping')
-        
 
-        form = CheckoutForm(self.request.POST or None)
         try:
-            order = CartOrder.objects.filter(user=self.request.user, ordered=False).first()
+            # Calculate total amount
+            for p_id, item in self.request.session["cart_data_obj"].items():
+                cleaned_price = item["price"].replace(',', '').replace('f', '').strip()
+                total_amount += int(item["qty"]) * float(cleaned_price)
+
+            order, created = CartOrder.objects.get_or_create(
+                user=self.request.user,
+                ordered=False,
+                defaults={'price': total_amount}
+            )
+
+            # Create CartOrderProducts for each item in the cart
+            for p_id, item in self.request.session["cart_data_obj"].items():
+                cleaned_price = item["price"].replace(',', '').replace('f', '').strip()
+
+                # Check if CartOrderProduct for the same item already exists for this order
+                product_exists = CartOrderProducts.objects.filter(
+                    order=order,
+                    item=item["title"]
+                ).exists()
+
+                if not product_exists:
+                    CartOrderProducts.objects.create(
+                        user=self.request.user,
+                        order=order,
+                        item=item["title"],
+                        image=item["image"],
+                        qty=item["qty"],
+                        price=float(cleaned_price),
+                        total=int(item["qty"]) * float(cleaned_price),
+                    )
+
             if form.is_valid():
-                # Calculate cart total amount and total items
-                cart_data = self.request.session.get("cart_data_obj", {})
-                cart_total_amount = sum(int(item["qty"]) * float(item["price"]) for item in cart_data.values())
-                totalcartitems = len(cart_data)
-
-
-
-                # Shipping Address Handling
                 use_default_shipping = form.cleaned_data.get('use_default_shipping')
                 if use_default_shipping:
                     shipping_address_qs = Address.objects.filter(
@@ -455,9 +456,7 @@ class CheckoutView(View):
                         default=True
                     )
                     if shipping_address_qs.exists():
-                        shipping_address = shipping_address_qs[0]
-                        order.shipping_address = shipping_address
-                        order.save()
+                        order.shipping_address = shipping_address_qs[0]
                     else:
                         messages.info(self.request, "No default shipping address available")
                         return redirect('core:checkout')
@@ -467,8 +466,9 @@ class CheckoutView(View):
                     shipping_country = form.cleaned_data.get('id_shipping_country')
                     shipping_zip = form.cleaned_data.get('shipping_zip')
                     ville = form.cleaned_data.get('ville')
+                    whatsapp = form.cleaned_data.get('whatsapp')
 
-                    if is_valid_form([shipping_address1, shipping_address2, shipping_country, shipping_zip, ville]):
+                    if is_valid_form([shipping_address1, shipping_address2, shipping_country, shipping_zip, ville, whatsapp]):
                         shipping_address = Address(
                             user=self.request.user,
                             street_address=shipping_address1,
@@ -476,10 +476,10 @@ class CheckoutView(View):
                             country=shipping_country,
                             zip=shipping_zip,
                             ville=ville,
+                            whatsapp=whatsapp,
                         )
                         shipping_address.save()
                         order.shipping_address = shipping_address
-                        # order.save()
 
                         set_default_shipping = form.cleaned_data.get('set_default_shipping')
                         if set_default_shipping:
@@ -487,15 +487,15 @@ class CheckoutView(View):
                             shipping_address.save()
                     else:
                         messages.info(self.request, "Please fill in the required shipping address fields")
+                        return redirect('core:checkout')
 
-                
-
-               
-            return redirect('core:checkout')
+                order.save()
+                return redirect('core:checkout')
 
         except ObjectDoesNotExist:
-            messages.warning(self.request, "Vous n'avez pas de commande active.")
+            messages.warning(self.request, "You do not have an active order.")
             return redirect("core:orders")
+
         
 
 
@@ -524,6 +524,21 @@ class PaymentInitializationView(View):
             if total_amount <= 0:
                 return JsonResponse({'error': 'Le montant total doit être supérieur à zéro.'}, status=400)
 
+            # Get or create an active CartOrder for the user
+            order, created = CartOrder.objects.get_or_create(
+                user=request.user,
+                ordered=False,
+                defaults={'price': total_amount}
+            )
+            
+            # Update the order price if it was retrieved and not created
+            if not created:
+                order.price = total_amount
+                order.save()
+
+            # Retrieve the order SKU
+            order_sku = order.sku
+
             # Générer un identifiant unique pour la transaction
             transaction_id = str(uuid.uuid4())
 
@@ -538,6 +553,7 @@ class PaymentInitializationView(View):
                 'description': 'Paiement de commande',
                 'return_url': request.build_absolute_uri('/payment/return/'),
                 'notify_url': request.build_absolute_uri('/payment/notify/'),
+                'metadata': json.dumps({'session_id': request.session.session_key}), 
                 'customer_id': request.user.id if request.user.is_authenticated else 'Anonymous',
                 'customer_name': request.user.username if request.user.is_authenticated else 'Anonymous',
                 'customer_surname': request.user.username if request.user.is_authenticated else 'Anonymous',
@@ -548,7 +564,9 @@ class PaymentInitializationView(View):
                 'customer_state': 'Lome',
                 'customer_country': 'TG',
                 'customer_zip_code': shipping_zip,
+                
             }
+            print("data are :", cinetpay_data)
 
             # Envoyer la requête à CinetPay
             response = requests.post(
@@ -561,6 +579,14 @@ class PaymentInitializationView(View):
             if response.status_code == 200 and response_data.get('code') == '201':
                 payment_url = response_data['data']['payment_url']
                 # Vous pouvez sauvegarder les détails de la transaction ici si nécessaire
+                payment = Payment.objects.update_or_create(
+                    transaction_id=transaction_id,
+                    defaults={
+                        'order': order,
+                        'amount': total_amount,
+                        'status': "PENDING",
+                    }
+        )
                 return JsonResponse({'payment_url': payment_url})
             else:
                 error_message = response_data.get('description', 'Une erreur est survenue lors de l\'initialisation du paiement.')
@@ -575,31 +601,49 @@ class PaymentInitializationView(View):
 def payment_notify(request):
     if request.method == 'POST':
         try:
+            # Charger les données envoyées par CinetPay
             data = json.loads(request.body)
 
-            # Extraire les données importantes de la notification
+            # Extraire les données importantes
             transaction_id = data.get('cpm_trans_id')
-            amount = data.get('cpm_amount')
-            status = data.get('cpm_trans_status')
 
-            # Vérifiez que les données nécessaires sont présentes
-            if not transaction_id or not amount or not status:
+            # Vérifier que les données nécessaires sont présentes
+            if not transaction_id is None:
                 return JsonResponse({'error': 'Missing transaction data.'}, status=400)
 
-            # Récupérer le paiement correspondant
+            # Requête de vérification à l'API de CinetPay pour confirmer le statut
+            verification_url = "https://api-checkout.cinetpay.com/v2/payment/check"
+            verification_data = {
+                "apikey": settings.CINETPAY_API_KEY,
+                "site_id": settings.CINETPAY_SITE_ID,
+                "transaction_id": transaction_id,
+            }
+            response = requests.post(verification_url, json=verification_data)
+            verification_result = response.json()
+
+            # Validation du statut de la transaction auprès de CinetPay
+            confirmed_status = verification_result.get('code')
+            amount = verification_result.get('amount')
+
+            # Vérifier si le paiement existe dans la base de données
             try:
                 payment = Payment.objects.get(transaction_id=transaction_id)
             except Payment.DoesNotExist:
                 return JsonResponse({'error': 'Transaction not found.'}, status=404)
 
-            # Mise à jour du statut en fonction du statut de la transaction
-            if status == '00':
+            # Mise à jour du statut en fonction du statut confirmé
+            if confirmed_status == '00':  # Code de succès de CinetPay
                 payment.status = 'COMPLETED'
-                payment.order.ordered = True  # Marquer la commande comme complète
+                payment.order.ordered = True
+                payment.order.paid_status = True
                 payment.order.save()
+
+                # Mise à jour des produits dans la commande
+                CartOrderProducts.objects.filter(order=payment.order).update(ordered=True)
             else:
                 payment.status = 'FAILED'
 
+            # Sauvegarde de la mise à jour
             payment.save()
 
             return JsonResponse({'status': 'success'})
@@ -609,89 +653,39 @@ def payment_notify(request):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
-    return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PaymentReturnView(View):
     def post(self, request, *args, **kwargs):
+        # Récupérer les paramètres `transaction_id` et `token` envoyés par CinetPay
         transaction_id = request.POST.get('transaction_id')
-        
+        token = request.POST.get('token')  # Optionnel si nécessaire pour d'autres vérifications
+
+        # Vérifier si le `transaction_id` est fourni
         if not transaction_id:
-            return JsonResponse({"error": "Transaction ID not provided."}, status=400)
+            return render(request, 'payment_return.html', {'payment_status': 'Transaction ID missing.'})
 
-        # Configuration de l'API CinetPay
-        api_url = "https://api.cinetpay.com/v1/?method=checkPayStatus"
-        site_id = settings.CINETPAY_SITE_ID
-        api_key = settings.CINETPAY_API_KEY
+        # Chercher le paiement correspondant
+        try:
+            payment = Payment.objects.get(transaction_id=transaction_id)
+        except Payment.DoesNotExist:
+            return render(request, 'payment_return.html', {'payment_status': 'Payment not found.'})
 
-        # Préparation des données pour la requête à CinetPay
-        data = {
-            "apikey": api_key,
-            "site_id": site_id,
-            "transaction_id": transaction_id,
-        }
-
-        # Faire la requête à l'API de CinetPay
-        response = requests.post(api_url, json=data)
-        result = response.json()
-        print(result)
-
-        # Vérifiez que 'amount' et 'status' sont présents dans la réponse
-        amount = result.get('amount')
-        status = result.get('status')
-
-        if amount is None or status is None:
-            return JsonResponse({"error": "Invalid response from CinetPay. 'amount' or 'status' not found."}, status=400)
-
-        payment, created = Payment.objects.create(
-            transaction_id=transaction_id,
-            defaults={
-                'user': request.user,  # Relier le paiement à l'utilisateur
-                'amount': amount,
-                'status': status,
-            }
-        )
-
-        # Vérifier le statut de la réponse
-        if response.status_code == 200 and result.get('status') == '00':
-            # Paiement réussi
-            payment_status = "Success"
-            # Mettre à jour le statut du paiement dans votre base de données
-            Payment.objects.update_or_create(
-            transaction_id=transaction_id,
-            defaults={
-                'user': request.user,  # Relier le paiement à l'utilisateur
-                'amount': result['amount'],
-                'status': result['status'],
-            }
-        )
-
-            # Mise à jour du statut de la commande et des articles
-            cart_order = payment.order
-            cart_order.paid_status = True
-            cart_order.ordered = True
-            cart_order.save()
-
-            # Marquer les produits comme commandés
-            CartOrderProducts.objects.filter(order=cart_order).update(ordered=True)
-
-
+        # Déterminer le statut du paiement pour afficher le message approprié
+        if payment.status == 'COMPLETED':
+            payment_status = "Votre paiement a été effectué avec succès."
+        elif payment.status == 'FAILED':
+            payment_status = "Votre paiement a échoué. Veuillez réessayer ou contacter le support."
         else:
-            # Paiement échoué ou en attente
-            payment_status = "Failed"
-            Payment.objects.update_or_create(
-            transaction_id=transaction_id,
-            defaults={
-                'user': request.user,  # Relier le paiement à l'utilisateur
-                'amount': result['amount'],
-                'status': result['status'],
-            }
-        )
+            payment_status = "Le paiement est en attente. Veuillez réessayer."
 
-        # Rediriger vers une page de confirmation de paiement avec le statut
+        # Rendre la page de retour avec le statut du paiement
         return render(request, 'payment_return.html', {'payment_status': payment_status})
+
+
 
 
 
